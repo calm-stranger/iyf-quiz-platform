@@ -1,20 +1,48 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 
 export default function Home() {
   const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [dob, setDob] = useState('');
   const [error, setError] = useState('');
+  const [quizTitle, setQuizTitle] = useState('Loading...');
   const router = useRouter();
+
+  useEffect(() => {
+    fetch('/api/active-quiz')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.title) {
+          setQuizTitle(data.title);
+        }
+      })
+      .catch(() => setQuizTitle('Online Assessment'));
+  }, []);
 
   const handleContinue = (e) => {
     e.preventDefault();
-    const trimmed = name.trim();
-    if (!trimmed || trimmed.length < 2) {
+    const trimmedName = name.trim();
+    const trimmedEmail = email.trim();
+    const trimmedDob = dob.trim();
+
+    if (!trimmedName || trimmedName.length < 2) {
       setError('Please enter your full name (at least 2 characters).');
       return;
     }
-    sessionStorage.setItem('studentName', trimmed);
+    if (!trimmedEmail || !trimmedEmail.includes('@')) {
+      setError('Please enter a valid email address.');
+      return;
+    }
+    if (!trimmedDob) {
+      setError('Please enter your date of birth.');
+      return;
+    }
+
+    sessionStorage.setItem('studentName', trimmedName);
+    sessionStorage.setItem('studentEmail', trimmedEmail);
+    sessionStorage.setItem('studentDob', trimmedDob);
     router.push('/instructions');
   };
 
@@ -47,29 +75,65 @@ export default function Home() {
           </div>
 
           <h1 className="text-2xl font-semibold text-[#18181B] text-center mb-1">
-            Online Assessment
+            {quizTitle}
           </h1>
           <p className="text-[#71717A] text-sm text-center mb-8">
-            Enter your name to begin
+            Enter your details to begin
           </p>
 
           <form onSubmit={handleContinue}>
-            <label className="block text-sm font-medium text-[#3F3F46] mb-2">
-              Full Name
-            </label>
-            <input
-              type="text"
-              value={name}
-              onChange={(e) => {
-                setName(e.target.value);
-                setError('');
-              }}
-              placeholder="e.g. Sahil Agarwala"
-              autoFocus
-              autoComplete="name"
-              className="w-full px-4 py-3 rounded-xl border border-[#D4D4D8] bg-white text-[#18181B] placeholder-[#A1A1AA] focus:outline-none focus:ring-2 focus:ring-[#18181B] focus:border-transparent text-sm"
-              style={{ userSelect: 'text' }}
-            />
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-[#3F3F46] mb-2">
+                Full Name
+              </label>
+              <input
+                type="text"
+                value={name}
+                onChange={(e) => {
+                  setName(e.target.value);
+                  setError('');
+                }}
+                placeholder="e.g. Sahil Agarwala"
+                autoFocus
+                autoComplete="name"
+                className="w-full px-4 py-3 rounded-xl border border-[#D4D4D8] bg-white text-[#18181B] placeholder-[#A1A1AA] focus:outline-none focus:ring-2 focus:ring-[#18181B] focus:border-transparent text-sm"
+                style={{ userSelect: 'text' }}
+              />
+            </div>
+
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-[#3F3F46] mb-2">
+                Email Address
+              </label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  setError('');
+                }}
+                placeholder="e.g. sahil@example.com"
+                autoComplete="email"
+                className="w-full px-4 py-3 rounded-xl border border-[#D4D4D8] bg-white text-[#18181B] placeholder-[#A1A1AA] focus:outline-none focus:ring-2 focus:ring-[#18181B] focus:border-transparent text-sm"
+                style={{ userSelect: 'text' }}
+              />
+            </div>
+
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-[#3F3F46] mb-2">
+                Date of Birth
+              </label>
+              <input
+                type="date"
+                value={dob}
+                onChange={(e) => {
+                  setDob(e.target.value);
+                  setError('');
+                }}
+                className="w-full px-4 py-3 rounded-xl border border-[#D4D4D8] bg-white text-[#18181B] placeholder-[#A1A1AA] focus:outline-none focus:ring-2 focus:ring-[#18181B] focus:border-transparent text-sm"
+                style={{ userSelect: 'text' }}
+              />
+            </div>
             {error && (
               <p className="text-red-500 text-xs mt-2">{error}</p>
             )}
@@ -83,7 +147,7 @@ export default function Home() {
           </form>
 
           <p className="text-center text-xs text-[#A1A1AA] mt-6">
-            please enter your full name.
+            please fill in all required fields.
           </p>
         </div>
       </div>

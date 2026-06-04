@@ -34,6 +34,8 @@ const rules = [
 
 export default function Instructions() {
   const [studentName, setStudentName] = useState('');
+  const [studentEmail, setStudentEmail] = useState('');
+  const [studentDob, setStudentDob] = useState('');
   const [agreed, setAgreed] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -41,11 +43,16 @@ export default function Instructions() {
 
   useEffect(() => {
     const name = sessionStorage.getItem('studentName');
-    if (!name) {
+    const email = sessionStorage.getItem('studentEmail');
+    const dob = sessionStorage.getItem('studentDob');
+    
+    if (!name || !email || !dob) {
       router.replace('/');
       return;
     }
     setStudentName(name);
+    setStudentEmail(email);
+    setStudentDob(dob);
   }, [router]);
 
   const handleStart = async () => {
@@ -57,7 +64,11 @@ export default function Instructions() {
       const res = await fetch('/api/start', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: studentName }),
+        body: JSON.stringify({ 
+          name: studentName,
+          email: studentEmail,
+          dob: studentDob 
+        }),
       });
 
       const data = await res.json();
@@ -96,7 +107,7 @@ export default function Instructions() {
           {/* Header */}
           <div className="mb-6">
             <p className="text-xs text-[#A1A1AA] uppercase tracking-widest mb-1">
-              Welcome, {studentName}
+              Hare Krishna, {studentName}
             </p>
             <h1 className="text-2xl font-semibold text-[#18181B]">
               Before You Begin

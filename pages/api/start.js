@@ -30,18 +30,34 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { name } = req.body ?? {};
+  const { name, email, dob } = req.body ?? {};
 
   if (!name || typeof name !== 'string' || name.trim().length < 2) {
     return res.status(400).json({ error: 'Invalid name.' });
   }
+  if (!email || typeof email !== 'string' || !email.includes('@')) {
+    return res.status(400).json({ error: 'Invalid email address.' });
+  }
+  if (!dob || typeof dob !== 'string') {
+    return res.status(400).json({ error: 'Invalid date of birth.' });
+  }
 
   const studentName = name.trim();
+  const studentEmail = email.trim();
+  const studentDob = dob.trim();
   // Stable key derived from the name (used for KV lookups)
   const studentKey = studentName.toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '');
 
   if (!studentKey) {
     return res.status(400).json({ error: 'Invalid name — please use letters and spaces.' });
+  }
+
+  // ── Device tracking check ─────────────────────────────────────────────
+  const existingDeviceStudent = req.cookies['device_student'];
+  if (existingDeviceStudent && existingDeviceStudent !== studentKey) {
+    return res.status(403).json({
+      error: 'You have already attempted the quiz under a different name on this device.',
+    });
   }
 
   try {
@@ -78,6 +94,12 @@ export default async function handler(req, res) {
     const existingSession = await kv.get(`session:${quizId}:${studentKey}`);
     if (existingSession) {
       const clientQuestions = buildClientQuestions(questions, existingSession.sessionQuestions);
+      
+      res.setHeader(
+        'Set-Cookie',
+        `device_student=${studentKey}; Path=/; HttpOnly; Max-Age=7200; SameSite=Strict`
+      );
+
       return res.status(200).json({
         sessionId: existingSession.sessionId,
         questions: clientQuestions,
@@ -125,6 +147,8 @@ export default async function handler(req, res) {
       quizId,
       quizTitle: quiz.title,
       studentName,
+      studentEmail,
+      studentDob,
       studentKey,
       startTime: Date.now(),
       sessionQuestions,         // full data for grading
@@ -133,7 +157,14 @@ export default async function handler(req, res) {
     };
 
     if (db.enabled) {
-      await db.createAttempt({ quizId, studentName, studentKey, sessionId });
+      await db.createAttempt({ 
+        quizId, 
+        studentName, 
+        studentKey, 
+        sessionId,
+        email: studentEmail,
+        dob: studentDob
+      });
     }
 
     // Store session (2-hour TTL is plenty for a 30-min quiz)
@@ -143,6 +174,11 @@ export default async function handler(req, res) {
     await kv.incr(`student_count:${quizId}`);
 
     const clientQuestions = buildClientQuestions(questions, sessionQuestions);
+
+    res.setHeader(
+      'Set-Cookie',
+      `device_student=${studentKey}; Path=/; HttpOnly; Max-Age=7200; SameSite=Strict`
+    );
 
     return res.status(200).json({
       sessionId,

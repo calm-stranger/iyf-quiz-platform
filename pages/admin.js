@@ -95,10 +95,12 @@ export default function Admin() {
 
   const exportCSV = () => {
     if (!data?.results?.length) return;
-    const header = 'Name,Score,Total,Percentage,Answered,Time Taken,Auto-Submitted,Violations,Submitted At';
+    const header = 'Name,Email,DOB,Score,Total,Percentage,Answered,Time Taken,Auto-Submitted,Violations,Submitted At';
     const rows = data.results.map((r) =>
       [
         `"${r.studentName}"`,
+        `"${r.email || ''}"`,
+        `"${r.dob || ''}"`,
         r.score,
         r.total,
         `${r.percentage}%`,
@@ -382,7 +384,7 @@ export default function Admin() {
                   <table className="w-full text-sm">
                     <thead>
                       <tr className="border-b border-[#F4F4F5]">
-                        {['#', 'Student', 'Score', '%', 'Answered', 'Time', 'Status', 'Violations', 'Submitted At', ''].map((h) => (
+                        {['#', 'Student', 'Email', 'DOB', 'Score', '%', 'Answered', 'Time', 'Status', 'Violations', 'Submitted At', ''].map((h) => (
                           <th
                             key={h}
                             className="px-4 py-3 text-left text-xs font-medium text-[#A1A1AA] uppercase tracking-wider"
@@ -397,6 +399,8 @@ export default function Admin() {
                         <tr key={r.studentKey || i} className="hover:bg-[#FAFAF9]">
                           <td className="px-4 py-3 text-[#A1A1AA]">{i + 1}</td>
                           <td className="px-4 py-3 font-medium text-[#18181B]">{r.studentName}</td>
+                          <td className="px-4 py-3 text-[#52525B] text-xs">{r.email || '-'}</td>
+                          <td className="px-4 py-3 text-[#52525B] text-xs">{r.dob || '-'}</td>
                           <td className="px-4 py-3 text-[#18181B]">
                             {r.score} / {r.total}
                           </td>

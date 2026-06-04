@@ -28,6 +28,8 @@ create table if not exists public.attempts (
   id uuid primary key default gen_random_uuid(),
   quiz_id uuid not null references public.quizzes(id) on delete cascade,
   student_name text not null,
+  email text,
+  dob date,
   student_key text not null,
   session_id text not null unique,
   started_at timestamptz not null default now(),
