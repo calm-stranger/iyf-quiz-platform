@@ -64,7 +64,7 @@ export default function Home() {
                 setName(e.target.value);
                 setError('');
               }}
-              placeholder="e.g. Priya Sharma"
+              placeholder="e.g. Sahil Agarwala"
               autoFocus
               autoComplete="name"
               className="w-full px-4 py-3 rounded-xl border border-[#D4D4D8] bg-white text-[#18181B] placeholder-[#A1A1AA] focus:outline-none focus:ring-2 focus:ring-[#18181B] focus:border-transparent text-sm"
@@ -83,7 +83,7 @@ export default function Home() {
           </form>
 
           <p className="text-center text-xs text-[#A1A1AA] mt-6">
-            Use the name your teacher registered you with
+            please enter your full name.
           </p>
         </div>
       </div>
