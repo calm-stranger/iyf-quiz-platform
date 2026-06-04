@@ -181,6 +181,8 @@ function mapDbAttempts(attempts, quizzes) {
         quizId: a.quiz_id,
         quizTitle: quiz?.title || 'Quiz',
         studentName: a.student_name,
+        email: a.email || '',
+        dob: a.dob || '',
         studentKey: a.student_key,
         score: a.score || 0,
         total: a.total || 0,

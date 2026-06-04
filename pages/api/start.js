@@ -52,14 +52,6 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Invalid name — please use letters and spaces.' });
   }
 
-  // ── Device tracking check ─────────────────────────────────────────────
-  const existingDeviceStudent = req.cookies['device_student'];
-  if (existingDeviceStudent && existingDeviceStudent !== studentKey) {
-    return res.status(403).json({
-      error: 'You have already attempted the quiz under a different name on this device.',
-    });
-  }
-
   try {
     const active = await loadActiveQuiz();
     if (!active.questions.length) {
@@ -95,11 +87,6 @@ export default async function handler(req, res) {
     if (existingSession) {
       const clientQuestions = buildClientQuestions(questions, existingSession.sessionQuestions);
       
-      res.setHeader(
-        'Set-Cookie',
-        `device_student=${studentKey}; Path=/; HttpOnly; Max-Age=7200; SameSite=Strict`
-      );
-
       return res.status(200).json({
         sessionId: existingSession.sessionId,
         questions: clientQuestions,
@@ -174,11 +161,6 @@ export default async function handler(req, res) {
     await kv.incr(`student_count:${quizId}`);
 
     const clientQuestions = buildClientQuestions(questions, sessionQuestions);
-
-    res.setHeader(
-      'Set-Cookie',
-      `device_student=${studentKey}; Path=/; HttpOnly; Max-Age=7200; SameSite=Strict`
-    );
 
     return res.status(200).json({
       sessionId,
