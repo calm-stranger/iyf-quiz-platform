@@ -1,0 +1,82 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  -webkit-user-select: none;
+  user-select: none;
+  box-sizing: border-box;
+}
+
+/* Allow text selection only in inputs */
+input, textarea {
+  -webkit-user-select: text;
+  user-select: text;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  background-color: #F7F6F3;
+  color: #18181B;
+}
+
+/* Timer pulse when low */
+@keyframes pulse-red {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+.timer-critical {
+  animation: pulse-red 1s ease-in-out infinite;
+  color: #DC2626;
+}
+
+/* Option hover */
+.option-btn {
+  transition: all 0.12s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.option-btn.selected,
+.option-btn.selected:hover,
+.option-btn.selected:focus,
+.option-btn.selected:active {
+  border-color: #18181B;
+  background-color: #18181B;
+  color: #FFFFFF;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .option-btn:hover:not(.selected) {
+    border-color: #A8A8B3;
+    background-color: #FAFAF8;
+  }
+}
+
+@media (max-width: 420px) {
+  .q-dot {
+    width: 2rem;
+    height: 2rem;
+  }
+}
+
+/* Smooth warning modal */
+@keyframes modal-in {
+  from { opacity: 0; transform: scale(0.96) translateY(8px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.modal-card {
+  animation: modal-in 0.2s ease-out;
+}
+
+/* Question grid dot */
+.q-dot {
+  transition: all 0.1s ease;
+}
