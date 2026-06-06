@@ -1,6 +1,6 @@
 # Quiz Platform
 
-A minimal, reliable online quiz system for live exams. Built with Next.js, Vercel KV for live sessions, and optional Supabase Postgres for durable quiz history.
+A minimal, reliable online quiz system for live exams. Built with Next.js, Upstash Redis for live sessions, and optional Supabase Postgres for durable quiz history.
 
 ## Features
 
@@ -41,17 +41,17 @@ vercel          # follow the prompts: new project, defaults are fine
 
 ---
 
-### Step 3 — Create a KV (Redis) store
+### Step 3 — Create an Upstash Redis store
 
-1. Go to [vercel.com/dashboard](https://vercel.com/dashboard)
-2. Open your project → **Storage** tab → **Create Database** → **KV**
-3. Name it anything (e.g. `quiz-store`) → **Create**
-4. Vercel automatically links the env vars to your project
+1. Go to [upstash.com](https://upstash.com/) and create a free account.
+2. Click **Create Database** in the Redis section. Name it (e.g. `quiz-store`) and pick a region.
+3. Scroll down to the **REST API** section of your new database.
+4. Add these environment variables locally (`.env.local`) and in Vercel Dashboard:
 
-Pull them locally:
-```bash
-vercel env pull .env.local
-```
+| Variable | Value |
+|---|---|
+| `UPSTASH_REDIS_REST_URL` | Your REST URL |
+| `UPSTASH_REDIS_REST_TOKEN` | Your REST Token |
 
 ---
 
@@ -90,7 +90,7 @@ In Vercel Dashboard → **Settings** → **Environment Variables**, add:
 | `SUPABASE_URL` | Optional, recommended for real exams |
 | `SUPABASE_SERVICE_ROLE_KEY` | Optional, recommended for real exams |
 
-The KV variables (`KV_REST_API_URL`, `KV_REST_API_TOKEN`) are added automatically when you link the store.
+Make sure `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN` are set in your Vercel project variables.
 
 ---
 
@@ -148,7 +148,7 @@ Your quiz is live! Share the URL with students.
 npm run dev
 ```
 
-Without `KV_REST_API_URL` set, the app uses an **in-memory store** — data resets on server restart, but everything works for testing.
+Without `UPSTASH_REDIS_REST_URL` set, the app uses an **in-memory store** — data resets on server restart, but everything works for testing.
 
 ---
 
@@ -158,7 +158,7 @@ Without `KV_REST_API_URL` set, the app uses an **in-memory store** — data rese
 |---|---|
 | Tab switch | `document.visibilitychange` event |
 | App switch | `window.blur` with 3-second grace period |
-| Violation tracking | Server-side in KV (refresh doesn't reset count) |
+| Violation tracking | Server-side in Redis (refresh doesn't reset count) |
 | Question order | Fisher-Yates shuffle seeded by student name |
 | Option order | Same shuffle, seeded per question |
 | Correct answers | Never sent to browser — graded server-side only |
@@ -189,6 +189,6 @@ You can:
 
 **"Already submitted"** — Use the Reset button in `/admin` to allow a retake.
 
-**KV errors in production** — Make sure you ran `vercel env pull` and the KV store is linked to the correct Vercel project.
+**Redis errors in production** — Make sure your Upstash variables are correctly set in Vercel.
 
-**Timer seems wrong** — The timer is calculated from `startTime` stored in KV. It's accurate regardless of client clock drift.
+**Timer seems wrong** — The timer is calculated from `startTime` stored in Redis. It's accurate regardless of client clock drift.

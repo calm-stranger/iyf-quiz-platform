@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 
-const QUIZ_DURATION_MINS = 30;
-const QUESTION_COUNT = 25;
+const QUIZ_DURATION_MINS = 25;
+const QUESTION_COUNT = 20;
 
 const rules = [
   {
@@ -45,7 +45,7 @@ export default function Instructions() {
     const name = sessionStorage.getItem('studentName');
     const email = sessionStorage.getItem('studentEmail');
     const dob = sessionStorage.getItem('studentDob');
-    
+
     if (!name || !email || !dob) {
       router.replace('/');
       return;
@@ -64,10 +64,10 @@ export default function Instructions() {
       const res = await fetch('/api/start', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
+        body: JSON.stringify({
           name: studentName,
           email: studentEmail,
-          dob: studentDob 
+          dob: studentDob
         }),
       });
 
