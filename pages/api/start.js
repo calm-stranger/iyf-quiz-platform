@@ -66,8 +66,9 @@ export default async function handler(req, res) {
     const maxStudents = quiz.max_students;
 
     // ── Already submitted? ─────────────────────────────────────────────────
+    let existingAttempt = null;
     if (db.enabled) {
-      const existingAttempt = await db.findAttempt(quizId, studentKey);
+      existingAttempt = await db.findAttempt(quizId, studentKey);
       if (existingAttempt?.status === 'submitted') {
         return res.status(409).json({
           error: 'You have already submitted this quiz. Contact your teacher if this is a mistake.',
@@ -137,21 +138,25 @@ export default async function handler(req, res) {
       studentEmail,
       studentDob,
       studentKey,
-      startTime: Date.now(),
+      startTime: existingAttempt ? new Date(existingAttempt.started_at).getTime() : Date.now(),
       sessionQuestions,         // full data for grading
-      violations: 0,
+      violations: existingAttempt ? (existingAttempt.violations || 0) : 0,
       submitted: false,
     };
 
     if (db.enabled) {
-      await db.createAttempt({ 
-        quizId, 
-        studentName, 
-        studentKey, 
-        sessionId,
-        email: studentEmail,
-        dob: studentDob
-      });
+      if (existingAttempt) {
+        await db.updateAttemptSession(existingAttempt.id, sessionId);
+      } else {
+        await db.createAttempt({ 
+          quizId, 
+          studentName, 
+          studentKey, 
+          sessionId,
+          email: studentEmail,
+          dob: studentDob
+        });
+      }
     }
 
     // Store session (2-hour TTL is plenty for a 30-min quiz)
