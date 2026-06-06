@@ -8,6 +8,7 @@ export default function Home() {
   const [dob, setDob] = useState('');
   const [error, setError] = useState('');
   const [quizTitle, setQuizTitle] = useState('Loading...');
+  const [isActive, setIsActive] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
@@ -17,8 +18,14 @@ export default function Home() {
         if (data.title) {
           setQuizTitle(data.title);
         }
+        if (data.isActive !== undefined) {
+          setIsActive(data.isActive);
+        }
       })
-      .catch(() => setQuizTitle('Online Assessment'));
+      .catch(() => {
+        setQuizTitle('Online Assessment');
+        setIsActive(true);
+      });
   }, []);
 
   const handleContinue = (e) => {
@@ -77,78 +84,88 @@ export default function Home() {
           <h1 className="text-2xl font-semibold text-[#18181B] text-center mb-1">
             {quizTitle}
           </h1>
-          <p className="text-[#71717A] text-sm text-center mb-8">
-            Enter your details to begin
-          </p>
 
-          <form onSubmit={handleContinue}>
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-[#3F3F46] mb-2">
-                Full Name
-              </label>
-              <input
-                type="text"
-                value={name}
-                onChange={(e) => {
-                  setName(e.target.value);
-                  setError('');
-                }}
-                placeholder="e.g. Sahil Agarwala"
-                autoFocus
-                autoComplete="name"
-                className="w-full px-4 py-3 rounded-xl border border-[#D4D4D8] bg-white text-[#18181B] placeholder-[#A1A1AA] focus:outline-none focus:ring-2 focus:ring-[#18181B] focus:border-transparent text-sm"
-                style={{ userSelect: 'text' }}
-              />
+          {!isActive ? (
+            <div className="mt-8 text-center p-6 bg-red-50 text-red-800 rounded-xl border border-red-100">
+              <p className="font-medium text-sm">There is currently no active quiz.</p>
+              <p className="text-xs mt-2 text-red-600">Please contact the administrator for more information.</p>
             </div>
+          ) : (
+            <>
+              <p className="text-[#71717A] text-sm text-center mb-8">
+                Enter your details to begin
+              </p>
 
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-[#3F3F46] mb-2">
-                Email Address
-              </label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => {
-                  setEmail(e.target.value);
-                  setError('');
-                }}
-                placeholder="e.g. sahil@example.com"
-                autoComplete="email"
-                className="w-full px-4 py-3 rounded-xl border border-[#D4D4D8] bg-white text-[#18181B] placeholder-[#A1A1AA] focus:outline-none focus:ring-2 focus:ring-[#18181B] focus:border-transparent text-sm"
-                style={{ userSelect: 'text' }}
-              />
-            </div>
+              <form onSubmit={handleContinue}>
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-[#3F3F46] mb-2">
+                    Full Name
+                  </label>
+                  <input
+                    type="text"
+                    value={name}
+                    onChange={(e) => {
+                      setName(e.target.value);
+                      setError('');
+                    }}
+                    placeholder="e.g. Sahil Agarwala"
+                    autoFocus
+                    autoComplete="name"
+                    className="w-full px-4 py-3 rounded-xl border border-[#D4D4D8] bg-white text-[#18181B] placeholder-[#A1A1AA] focus:outline-none focus:ring-2 focus:ring-[#18181B] focus:border-transparent text-sm"
+                    style={{ userSelect: 'text' }}
+                  />
+                </div>
 
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-[#3F3F46] mb-2">
-                Date of Birth
-              </label>
-              <input
-                type="date"
-                value={dob}
-                onChange={(e) => {
-                  setDob(e.target.value);
-                  setError('');
-                }}
-                className="w-full px-4 py-3 rounded-xl border border-[#D4D4D8] bg-white text-[#18181B] placeholder-[#A1A1AA] focus:outline-none focus:ring-2 focus:ring-[#18181B] focus:border-transparent text-sm"
-                style={{ userSelect: 'text' }}
-              />
-            </div>
-            {error && (
-              <p className="text-red-500 text-xs mt-2">{error}</p>
-            )}
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-[#3F3F46] mb-2">
+                    Email Address
+                  </label>
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                      setError('');
+                    }}
+                    placeholder="e.g. sahil@example.com"
+                    autoComplete="email"
+                    className="w-full px-4 py-3 rounded-xl border border-[#D4D4D8] bg-white text-[#18181B] placeholder-[#A1A1AA] focus:outline-none focus:ring-2 focus:ring-[#18181B] focus:border-transparent text-sm"
+                    style={{ userSelect: 'text' }}
+                  />
+                </div>
 
-            <button
-              type="submit"
-              className="w-full mt-4 bg-[#18181B] text-white py-3 rounded-xl font-medium text-sm hover:bg-[#27272A] transition-colors"
-            >
-              Continue →
-            </button>
-          </form>
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-[#3F3F46] mb-2">
+                    Date of Birth
+                  </label>
+                  <input
+                    type="date"
+                    value={dob}
+                    onChange={(e) => {
+                      setDob(e.target.value);
+                      setError('');
+                    }}
+                    className="w-full px-4 py-3 rounded-xl border border-[#D4D4D8] bg-white text-[#18181B] placeholder-[#A1A1AA] focus:outline-none focus:ring-2 focus:ring-[#18181B] focus:border-transparent text-sm"
+                    style={{ userSelect: 'text' }}
+                  />
+                </div>
+                {error && (
+                  <p className="text-red-500 text-xs mt-2">{error}</p>
+                )}
 
-          <p className="text-center text-xs text-[#A1A1AA] mt-6">
-            please fill in all required fields.
-          </p>
+                <button
+                  type="submit"
+                  className="w-full mt-4 bg-[#18181B] text-white py-3 rounded-xl font-medium text-sm hover:bg-[#27272A] transition-colors"
+                >
+                  Continue →
+                </button>
+              </form>
+
+              <p className="text-center text-xs text-[#A1A1AA] mt-6">
+                please fill in all required fields.
+              </p>
+            </>
+          )}
         </div>
       </div>
     </>
