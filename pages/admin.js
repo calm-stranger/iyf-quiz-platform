@@ -9,6 +9,7 @@ export default function Admin() {
   const [resetting, setResetting] = useState(null);
   const [tab, setTab] = useState('submitted'); // 'submitted' | 'active'
   const [selectedQuizId, setSelectedQuizId] = useState('');
+  const [wrongAnswersModal, setWrongAnswersModal] = useState(null); // { studentName, answers, loading }
   const [newQuiz, setNewQuiz] = useState({
     title: '',
     durationMinutes: '30',
@@ -59,6 +60,22 @@ export default function Admin() {
       alert('Network error.');
     }
     setResetting(null);
+  };
+
+  const fetchWrongAnswers = async (attemptId, studentName) => {
+    setWrongAnswersModal({ studentName, answers: [], loading: true });
+    try {
+      const qs = new URLSearchParams({ password, action: 'wrong_answers', attemptId });
+      const res = await fetch(`/api/admin?${qs.toString()}`);
+      const json = await res.json();
+      if (res.ok) {
+        setWrongAnswersModal({ studentName, answers: json.wrongAnswers || [], loading: false });
+      } else {
+        setWrongAnswersModal({ studentName, answers: [], loading: false, error: json.error || 'Failed to load.' });
+      }
+    } catch {
+      setWrongAnswersModal({ studentName, answers: [], loading: false, error: 'Network error.' });
+    }
   };
 
   const adminAction = async (payload) => {
@@ -445,14 +462,24 @@ export default function Admin() {
                             {new Date(r.submittedAt).toLocaleTimeString()}
                           </td>
                           <td className="px-4 py-3">
-                            <button
-                              onClick={() => handleReset(r.studentKey, r.studentName, r.attemptId)}
-                              disabled={resetting === r.studentKey}
-                              className="text-xs text-[#A1A1AA] hover:text-red-600 transition-colors disabled:opacity-50"
-                              title="Reset student (allow retake)"
-                            >
-                              {resetting === r.studentKey ? '…' : 'Reset'}
-                            </button>
+                            <div className="flex items-center gap-2">
+                              <button
+                                onClick={() => fetchWrongAnswers(r.attemptId, r.studentName)}
+                                className="text-xs text-indigo-500 hover:text-indigo-700 font-medium transition-colors"
+                                title="View questions answered incorrectly"
+                              >
+                                View Answers
+                              </button>
+                              <span className="text-[#D4D4D8]">|</span>
+                              <button
+                                onClick={() => handleReset(r.studentKey, r.studentName, r.attemptId)}
+                                disabled={resetting === r.studentKey}
+                                className="text-xs text-[#A1A1AA] hover:text-red-600 transition-colors disabled:opacity-50"
+                                title="Reset student (allow retake)"
+                              >
+                                {resetting === r.studentKey ? '…' : 'Reset'}
+                              </button>
+                            </div>
                           </td>
                         </tr>
                       ))}
@@ -509,6 +536,113 @@ export default function Admin() {
           )}
         </div>
       </div>
+
+      {/* ── Wrong Answers Modal ────────────────────────────────────────── */}
+      {wrongAnswersModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center p-4"
+          style={{ backgroundColor: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)' }}
+          onClick={(e) => { if (e.target === e.currentTarget) setWrongAnswersModal(null); }}
+        >
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[85vh] flex flex-col overflow-hidden">
+            {/* Modal Header */}
+            <div className="flex items-start justify-between px-6 py-5 border-b border-[#F4F4F5] flex-shrink-0">
+              <div>
+                <h2 className="text-base font-semibold text-[#18181B]">
+                  {wrongAnswersModal.studentName}
+                </h2>
+                <p className="text-xs text-[#71717A] mt-0.5">
+                  {wrongAnswersModal.loading
+                    ? 'Loading…'
+                    : wrongAnswersModal.error
+                    ? 'Error loading answers'
+                    : wrongAnswersModal.answers.length === 0
+                    ? 'No wrong answers — perfect score! 🎉'
+                    : `${wrongAnswersModal.answers.length} question${wrongAnswersModal.answers.length !== 1 ? 's' : ''} answered incorrectly`
+                  }
+                </p>
+              </div>
+              <button
+                onClick={() => setWrongAnswersModal(null)}
+                className="text-[#A1A1AA] hover:text-[#18181B] transition-colors mt-0.5"
+                aria-label="Close"
+              >
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            {/* Modal Body */}
+            <div className="overflow-y-auto flex-1 px-6 py-4 space-y-4">
+              {wrongAnswersModal.loading && (
+                <div className="flex items-center justify-center py-12 text-[#A1A1AA] text-sm">
+                  <svg className="w-5 h-5 mr-2 animate-spin" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
+                  </svg>
+                  Loading answers…
+                </div>
+              )}
+
+              {!wrongAnswersModal.loading && wrongAnswersModal.error && (
+                <div className="text-center py-12 text-red-500 text-sm">{wrongAnswersModal.error}</div>
+              )}
+
+              {!wrongAnswersModal.loading && !wrongAnswersModal.error && wrongAnswersModal.answers.length === 0 && (
+                <div className="text-center py-12">
+                  <p className="text-4xl mb-3">🏆</p>
+                  <p className="text-[#18181B] font-medium">Perfect score!</p>
+                  <p className="text-sm text-[#71717A] mt-1">This student got every question correct.</p>
+                </div>
+              )}
+
+              {!wrongAnswersModal.loading && wrongAnswersModal.answers.map((item, idx) => (
+                <div key={item.id || idx} className="rounded-xl border border-[#E4E4E7] overflow-hidden">
+                  {/* Question */}
+                  <div className="bg-[#FAFAF9] px-4 py-3 border-b border-[#F4F4F5]">
+                    <span className="text-[10px] font-semibold text-[#A1A1AA] uppercase tracking-widest">Q{idx + 1}</span>
+                    <p className="text-sm font-medium text-[#18181B] mt-0.5 leading-snug">{item.questionText}</p>
+                  </div>
+                  {/* Options */}
+                  <div className="px-4 py-3 space-y-2">
+                    {(Array.isArray(item.options) ? item.options : []).map((opt, optIdx) => {
+                      const isSelected = optIdx === item.selectedIndex;
+                      const isCorrect = optIdx === item.correctIndex;
+                      let rowStyle = 'border border-[#E4E4E7] text-[#52525B]';
+                      let badge = null;
+                      if (isCorrect) {
+                        rowStyle = 'border border-emerald-300 bg-emerald-50 text-emerald-800';
+                        badge = <span className="ml-auto text-[10px] font-semibold text-emerald-600 bg-emerald-100 px-1.5 py-0.5 rounded-full">Correct</span>;
+                      } else if (isSelected) {
+                        rowStyle = 'border border-red-300 bg-red-50 text-red-700';
+                        badge = <span className="ml-auto text-[10px] font-semibold text-red-600 bg-red-100 px-1.5 py-0.5 rounded-full">Student's answer</span>;
+                      }
+                      return (
+                        <div key={optIdx} className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm ${rowStyle}`}>
+                          <span className="font-mono text-xs w-4 flex-shrink-0">{String.fromCharCode(65 + optIdx)}.</span>
+                          <span className="flex-1">{typeof opt === 'string' ? opt : JSON.stringify(opt)}</span>
+                          {badge}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Modal Footer */}
+            <div className="px-6 py-4 border-t border-[#F4F4F5] flex justify-end flex-shrink-0">
+              <button
+                onClick={() => setWrongAnswersModal(null)}
+                className="px-4 py-2 bg-[#18181B] text-white text-sm rounded-lg hover:bg-[#27272A] transition-colors"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }

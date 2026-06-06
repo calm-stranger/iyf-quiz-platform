@@ -11,6 +11,7 @@
 const kv = require('../../lib/store');
 const fallbackQuestions = require('../../lib/questions');
 const db = require('../../lib/db');
+const { getWrongAnswers } = db;
 
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin123';
 const LOCAL_QUIZ_ID = 'local';
@@ -94,6 +95,14 @@ export default async function handler(req, res) {
   // ── GET: fetch all results ───────────────────────────────────────────────
   if (req.method === 'GET') {
     try {
+      // Sub-action: get wrong answers for a specific attempt
+      if (req.query.action === 'wrong_answers') {
+        if (!attemptId) return res.status(400).json({ error: 'attemptId is required.' });
+        if (!db.enabled) return res.status(400).json({ error: 'Supabase is not configured.' });
+        const wrongAnswers = await getWrongAnswers(attemptId);
+        return res.status(200).json({ wrongAnswers });
+      }
+
       const quizzes = db.enabled ? await db.listQuizzes() : [localQuizSummary()];
       const selectedQuizId =
         quizId !== LOCAL_QUIZ_ID
