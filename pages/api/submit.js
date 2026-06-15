@@ -113,7 +113,11 @@ export default async function handler(req, res) {
 
     // Store a local/fast copy for the current admin view.
     await kv.set(`result:${quizId}:${studentKey}`, result);
-    await kv.lpush(`results_list:${quizId}`, studentKey);
+    // Only add to the results list if not already present (prevents duplicates on retake).
+    const existingKeys = await kv.lrange(`results_list:${quizId}`, 0, -1);
+    if (!existingKeys.includes(studentKey)) {
+      await kv.lpush(`results_list:${quizId}`, studentKey);
+    }
 
     // Clean up session
     session.submitted = true;

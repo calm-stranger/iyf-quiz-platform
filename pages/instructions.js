@@ -12,7 +12,7 @@ const rules = [
   },
   {
     icon: '📵',
-    text: 'Do not switch to another application or minimize this window.',
+    text: 'Do not switch to another application, check notifications, or let your screen turn off. These will trigger a cheating violation.',
   },
   {
     icon: '⚠️',
