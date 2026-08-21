@@ -18,6 +18,15 @@ const QUIZ_DURATION_MINUTES = parseInt(process.env.QUIZ_DURATION_MINUTES || '30'
 const QUIZ_DURATION_MS = QUIZ_DURATION_MINUTES * 60 * 1000;
 const MAX_STUDENTS = parseInt(process.env.MAX_STUDENTS || '50', 10);
 
+/** Lowercase, punctuation-free, stable across submissions. */
+function slugify(value) {
+  return String(value)
+    .toLowerCase()
+    .replace(/\s+/g, '_')
+    .replace(/[^a-z0-9_|-]/g, '')
+    .replace(/_+/g, '_');
+}
+
 function generateSessionId() {
   return (
     Math.random().toString(36).slice(2, 10) +
@@ -30,30 +39,52 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { name, email, dob } = req.body ?? {};
+  const { name, email, dob, school, quizSlug } = req.body ?? {};
 
   if (!name || typeof name !== 'string' || name.trim().length < 2) {
     return res.status(400).json({ error: 'Invalid name.' });
-  }
-  if (!email || typeof email !== 'string' || !email.includes('@')) {
-    return res.status(400).json({ error: 'Invalid email address.' });
   }
   if (!dob || typeof dob !== 'string') {
     return res.status(400).json({ error: 'Invalid date of birth.' });
   }
 
+  /*
+    One of school or email identifies the student alongside their name. The
+    Utkarsh entry form collects a school; the standalone form collects an
+    email. Either satisfies this — see studentKey below for why it matters.
+  */
+  const studentSchool = typeof school === 'string' ? school.trim() : '';
+  const studentEmail = typeof email === 'string' ? email.trim() : '';
+
+  if (!studentSchool && !studentEmail) {
+    return res.status(400).json({ error: 'Please enter your school.' });
+  }
+  if (!studentSchool && !studentEmail.includes('@')) {
+    return res.status(400).json({ error: 'Invalid email address.' });
+  }
+
   const studentName = name.trim();
-  const studentEmail = email.trim();
   const studentDob = dob.trim();
-  // Stable key derived from the name (used for KV lookups)
-  const studentKey = studentName.toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9_]/g, '');
+
+  /*
+    The key that identifies a student within a quiz, and that `attempts` is
+    unique on.
+
+    It used to be the name alone, which is fine for a class of thirty and
+    actively harmful at an inter-school event: the second "Rahul Sharma" to
+    arrive was told he had already submitted, and locked out of his own quiz.
+    Including the date of birth and the school makes a genuine collision
+    require two students with the same name, born the same day, at the same
+    school.
+  */
+  const studentKey = slugify([studentName, studentDob, studentSchool || studentEmail].join('|'));
 
   if (!studentKey) {
     return res.status(400).json({ error: 'Invalid name — please use letters and spaces.' });
   }
 
   try {
-    const active = await loadActiveQuiz();
+    const active = await loadActiveQuiz(quizSlug);
     if (!active.questions.length) {
       return res.status(409).json({
         error: 'No active quiz is available. Ask the admin to publish a quiz first.',
@@ -153,8 +184,9 @@ export default async function handler(req, res) {
           studentName, 
           studentKey, 
           sessionId,
-          email: studentEmail,
-          dob: studentDob
+          email: studentEmail || null,
+          dob: studentDob,
+          school: studentSchool || null
         });
       }
     }
@@ -184,8 +216,10 @@ export default async function handler(req, res) {
  * Strip server-only fields and build the question list sent to the browser.
  * The browser never sees correctAnswerIndex or qIdx.
  */
-async function loadActiveQuiz() {
-  const active = await db.getActiveQuizWithQuestions();
+async function loadActiveQuiz(quizSlug) {
+  // With a slug the student is entering one specific quiz — their group's.
+  // Without one, this is the single global active quiz, as before.
+  const active = await db.getActiveQuizWithQuestions(quizSlug ? { slug: quizSlug } : {});
   if (active) return active;
 
   return {

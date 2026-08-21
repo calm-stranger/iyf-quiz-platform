@@ -59,3 +59,38 @@ create index if not exists quizzes_status_created_idx on public.quizzes(status, 
 create index if not exists questions_quiz_position_idx on public.questions(quiz_id, position);
 create index if not exists attempts_quiz_status_idx on public.attempts(quiz_id, status);
 create index if not exists attempts_student_key_idx on public.attempts(student_key);
+
+-- ============================================================================
+--  V2 — running several quizzes at once (added for Utkarsh 2026)
+--
+--  The platform was built around ONE globally active quiz. Utkarsh needs three
+--  running side by side, one per class group, so a quiz now belongs to a lane:
+--
+--      event       'utkarsh', or null for an ordinary standalone quiz
+--      group_code  'A' | 'B' | 'C' within that event
+--      stage       1 today; a later prelim/final split needs no migration
+--      slug        stable id for a URL, e.g. 'utkarsh-2026-a'
+--
+--  Publishing now closes only the quizzes in the SAME lane. Quizzes with no
+--  event keep the old behaviour exactly — one global active slot — so nothing
+--  already deployed changes, and publishing an ordinary quiz can no longer
+--  knock the three Utkarsh quizzes offline.
+--
+--  Every statement here is additive and safe to re-run on the live database.
+-- ============================================================================
+
+alter table public.quizzes add column if not exists event text;
+alter table public.quizzes add column if not exists group_code text;
+alter table public.quizzes add column if not exists slug text;
+alter table public.quizzes add column if not exists stage integer not null default 1;
+
+-- The school a student attends. Replaces email as the thing that makes two
+-- students of the same name distinguishable — see student_key in api/start.js.
+alter table public.attempts add column if not exists school text;
+
+-- Partial, so the many existing quizzes with a null slug do not collide.
+create unique index if not exists quizzes_slug_idx
+  on public.quizzes(slug) where slug is not null;
+
+create index if not exists quizzes_lane_idx
+  on public.quizzes(event, group_code, stage, status);
