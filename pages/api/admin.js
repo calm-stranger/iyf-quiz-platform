@@ -11,6 +11,8 @@
 const kv = require('../../lib/store');
 const fallbackQuestions = require('../../lib/questions');
 const db = require('../../lib/db');
+const { EVENT, GROUPS } = require('../../lib/utkarsh');
+const { listBanks, getBank } = require('../../question-banks');
 const { getWrongAnswers } = db;
 
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin123';
@@ -39,8 +41,63 @@ export default async function handler(req, res) {
         const maxStudents = parseInt(req.body.maxStudents || '50', 10);
         if (!title) return res.status(400).json({ error: 'Quiz title is required.' });
 
-        const quiz = await db.createQuiz({ title, durationMinutes, maxStudents });
+        const quiz = await db.createQuiz({
+          title,
+          durationMinutes,
+          maxStudents,
+          // Optional: without these the quiz is an ordinary standalone one and
+          // behaves exactly as it did before V2.
+          event: req.body.event || undefined,
+          groupCode: req.body.groupCode || undefined,
+          slug: req.body.slug || undefined,
+          stage: req.body.stage ? parseInt(req.body.stage, 10) : undefined,
+        });
         return res.status(200).json({ quiz });
+      }
+
+      /*
+        Creates the three Utkarsh group quizzes in one go, as drafts.
+
+        Doing this by hand means typing three titles, three slugs and three
+        group codes correctly on the morning of the event; a slug typo would
+        send a whole group to "no active quiz" with no obvious cause. Skips any
+        group whose quiz already exists, so it is safe to press twice.
+      */
+      if (action === 'setup_utkarsh') {
+        const durationMinutes = parseInt(req.body.durationMinutes || '20', 10);
+        const maxStudents = parseInt(req.body.maxStudents || '150', 10);
+        const created = [];
+        const skipped = [];
+
+        for (const group of GROUPS) {
+          const existing = await db.getQuizBySlug(group.slug);
+          if (existing) {
+            skipped.push(group.slug);
+            continue;
+          }
+          const quiz = await db.createQuiz({
+            title: group.title,
+            durationMinutes,
+            maxStudents,
+            event: EVENT,
+            groupCode: group.code,
+            slug: group.slug,
+            stage: 1,
+          });
+          created.push(quiz?.slug || group.slug);
+        }
+        return res.status(200).json({ created, skipped });
+      }
+
+      if (action === 'import_bank') {
+        if (!req.body.quizId) return res.status(400).json({ error: 'quizId is required.' });
+        const questions = getBank(req.body.bank);
+        if (!questions) return res.status(400).json({ error: 'Unknown question bank.' });
+        if (!questions.length) {
+          return res.status(400).json({ error: 'That bank has no questions in it yet.' });
+        }
+        const imported = await db.importQuestions(req.body.quizId, questions);
+        return res.status(200).json({ imported: imported.length });
       }
 
       if (action === 'import_current_questions') {
@@ -95,6 +152,11 @@ export default async function handler(req, res) {
   // ── GET: fetch all results ───────────────────────────────────────────────
   if (req.method === 'GET') {
     try {
+      // Sub-action: the question banks available to import from
+      if (req.query.action === 'banks') {
+        return res.status(200).json({ banks: listBanks() });
+      }
+
       // Sub-action: get wrong answers for a specific attempt
       if (req.query.action === 'wrong_answers') {
         if (!attemptId) return res.status(400).json({ error: 'attemptId is required.' });

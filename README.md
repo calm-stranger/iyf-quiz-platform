@@ -192,3 +192,58 @@ You can:
 **Redis errors in production** — Make sure your Upstash variables are correctly set in Vercel.
 
 **Timer seems wrong** — The timer is calculated from `startTime` stored in Redis. It's accurate regardless of client clock drift.
+
+---
+
+## Utkarsh (V2) — several quizzes at once
+
+`/utkarsh` runs the Vedic Quiz for the Utkarsh Heritage Festival: one landing
+page, three groups, three quizzes live **at the same time**.
+
+| URL | Purpose |
+|---|---|
+| `/utkarsh` | Branding, what the quiz is, and the three group buttons |
+| `/utkarsh/a` · `/b` · `/c` | Entry form for that group — name, date of birth, school |
+
+From there students join the existing `/instructions` → `/quiz` → `/done` flow
+unchanged; the group's quiz slug travels with them so they always enter their
+own group's quiz rather than whichever happens to be active.
+
+### On the day
+
+1. `/admin` → **Set up the three group quizzes**. Creates them as drafts, and
+   skips any that already exist, so it is safe to press twice.
+2. Select each quiz → choose its bank → **Import questions**.
+3. **Publish** all three. Publishing one no longer closes the others.
+4. Afterwards, **Close** each and export its CSV separately.
+
+### Why a quiz now has a "lane"
+
+Before V2 there was one globally active quiz: publishing one closed every
+other. Utkarsh needs three. A quiz now carries `event`, `group_code` and
+`stage`, and publishing closes only quizzes in the same lane.
+
+A quiz with **no** event is an ordinary standalone quiz and behaves exactly as
+it always did — one global slot. It is also invisible to `/utkarsh`, and the
+Utkarsh quizzes are invisible to `/`, so the two cannot be confused. `stage`
+exists so a later prelim/final split needs no migration.
+
+### Questions
+
+Banks live in `question-banks/`, one file per group, registered in
+`question-banks/index.js`. They are files rather than a paste box so they stay
+version-controlled while several people write them. Editing a bank does **not**
+change a quiz that has already been imported — re-import to pick up changes.
+
+### Identity
+
+`student_key` is derived from name + date of birth + school. It used to be the
+name alone, and `attempts` is unique on `(quiz_id, student_key)` — so at an
+inter-school event the second student of any repeated name was told they had
+already submitted and could not sit the quiz. Registration codes are checked at
+the desk, not in the app.
+
+### Schema
+
+Re-run `supabase/schema.sql`. Everything V2 adds is `add column if not exists`
+and safe on a live database.

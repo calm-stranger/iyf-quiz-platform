@@ -10,8 +10,13 @@ export default async function handler(req, res) {
   try {
     let title = FALLBACK_QUIZ_TITLE;
     let isActive = true;
+
+    // ?slug=… asks about one specific quiz — a group's. Without it this is
+    // the single globally active standalone quiz, as before.
+    const slug = typeof req.query.slug === 'string' ? req.query.slug : '';
+
     if (db.enabled) {
-      const active = await db.getActiveQuizWithQuestions();
+      const active = await db.getActiveQuizWithQuestions(slug ? { slug } : {});
       if (active?.quiz?.title) {
         title = active.quiz.title;
         isActive = true;

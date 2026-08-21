@@ -10,6 +10,8 @@ export default function Admin() {
   const [tab, setTab] = useState('submitted'); // 'submitted' | 'active'
   const [selectedQuizId, setSelectedQuizId] = useState('');
   const [wrongAnswersModal, setWrongAnswersModal] = useState(null); // { studentName, answers, loading }
+  const [banks, setBanks] = useState([]);
+  const [selectedBank, setSelectedBank] = useState('');
   const [newQuiz, setNewQuiz] = useState({
     title: '',
     durationMinutes: '30',
@@ -17,6 +19,13 @@ export default function Admin() {
   });
 
   const fetchData = async (pwd = password, quizId = selectedQuizId) => {
+    // The list of importable banks never changes at runtime; fetched here so
+    // it is available as soon as the admin is signed in.
+    fetch(`/api/admin?action=banks&password=${encodeURIComponent(pwd)}`)
+      .then((r) => (r.ok ? r.json() : null))
+      .then((j) => j?.banks && setBanks(j.banks))
+      .catch(() => {});
+
     setLoading(true);
     setError('');
     try {
@@ -97,6 +106,11 @@ export default function Admin() {
       setError('Network error. Please try again.');
     }
     setLoading(false);
+  };
+
+  const setupUtkarsh = async () => {
+    if (!confirm('Create the three Utkarsh group quizzes as drafts? Existing ones are left alone.')) return;
+    await adminAction({ action: 'setup_utkarsh' });
   };
 
   const createQuiz = async (e) => {
@@ -283,6 +297,14 @@ export default function Admin() {
                         <p className="font-medium text-sm text-[#18181B]">{q.title}</p>
                         <span className="text-[10px] uppercase tracking-wider text-[#71717A]">{q.status}</span>
                       </div>
+                      {/* Three Utkarsh quizzes are live at once and their
+                          titles are near-identical, so the lane is shown. */}
+                      {q.event ? (
+                        <p className="mt-1 inline-block rounded bg-[#EEF1FA] px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[#1B3A9C]">
+                          {q.event}{q.group_code ? ` · group ${q.group_code}` : ''}
+                          {q.stage && q.stage > 1 ? ` · stage ${q.stage}` : ''}
+                        </p>
+                      ) : null}
                       <p className="text-xs text-[#71717A] mt-2">
                         {q.questionCount || 0} questions · {q.submittedCount || 0} submitted · avg {q.avgScore || 0}%
                       </p>
@@ -292,12 +314,26 @@ export default function Admin() {
 
                 {selectedQuiz && (
                   <div className="flex flex-wrap gap-2 mt-4 pt-4 border-t border-[#F4F4F5]">
-                    <button
-                      onClick={() => adminAction({ action: 'import_current_questions', quizId: selectedQuiz.id })}
-                      disabled={loading}
-                      className="px-3 py-2 text-xs border border-[#D4D4D8] rounded-lg hover:bg-[#F4F4F5]"
+                    <select
+                      value={selectedBank}
+                      onChange={(e) => setSelectedBank(e.target.value)}
+                      className="px-2 py-2 text-xs border border-[#D4D4D8] rounded-lg bg-white"
                     >
-                      Import questions.js
+                      <option value="">Choose a question bank…</option>
+                      {banks.map((b) => (
+                        <option key={b.key} value={b.key}>
+                          {b.label} ({b.count})
+                        </option>
+                      ))}
+                    </select>
+                    <button
+                      onClick={() =>
+                        adminAction({ action: 'import_bank', quizId: selectedQuiz.id, bank: selectedBank })
+                      }
+                      disabled={loading || !selectedBank}
+                      className="px-3 py-2 text-xs border border-[#D4D4D8] rounded-lg hover:bg-[#F4F4F5] disabled:opacity-40"
+                    >
+                      Import questions
                     </button>
                     <button
                       onClick={() => adminAction({ action: 'set_status', quizId: selectedQuiz.id, status: 'active' })}
@@ -315,6 +351,23 @@ export default function Admin() {
                     </button>
                   </div>
                 )}
+              </div>
+
+              {/* One button instead of typing three titles, three slugs and
+                  three group codes correctly on the morning of the event. */}
+              <div className="bg-white rounded-xl border border-[#E4E4E7] p-4">
+                <p className="text-sm font-medium text-[#18181B]">Utkarsh 2026</p>
+                <p className="mt-1 text-xs leading-relaxed text-[#71717A]">
+                  Creates the three group quizzes as drafts. Import a bank into each, then
+                  publish them — all three can be live at once.
+                </p>
+                <button
+                  onClick={setupUtkarsh}
+                  disabled={loading}
+                  className="mt-3 px-3 py-2 text-xs bg-[#1B3A9C] text-white rounded-lg disabled:opacity-40"
+                >
+                  Set up the three group quizzes
+                </button>
               </div>
 
               <form onSubmit={createQuiz} className="bg-white rounded-xl border border-[#E4E4E7] p-4">

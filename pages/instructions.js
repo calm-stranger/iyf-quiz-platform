@@ -37,6 +37,8 @@ export default function Instructions() {
   const [studentEmail, setStudentEmail] = useState('');
   const [studentDob, setStudentDob] = useState('');
   const [agreed, setAgreed] = useState(false);
+  const [studentSchool, setStudentSchool] = useState('');
+  const [quizSlug, setQuizSlug] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const router = useRouter();
@@ -45,14 +47,24 @@ export default function Instructions() {
     const name = sessionStorage.getItem('studentName');
     const email = sessionStorage.getItem('studentEmail');
     const dob = sessionStorage.getItem('studentDob');
+    const school = sessionStorage.getItem('studentSchool');
+    const slug = sessionStorage.getItem('quizSlug');
 
-    if (!name || !email || !dob) {
-      router.replace('/');
+    /*
+      Two entry points now lead here. The standalone form collects an email;
+      the Utkarsh group form collects a school and the slug of that group's
+      quiz. Either is enough, so send them back to whichever they came from
+      rather than always to /.
+    */
+    if (!name || !dob || (!email && !school)) {
+      router.replace(slug ? '/utkarsh' : '/');
       return;
     }
     setStudentName(name);
-    setStudentEmail(email);
+    setStudentEmail(email || '');
     setStudentDob(dob);
+    setStudentSchool(school || '');
+    setQuizSlug(slug || '');
   }, [router]);
 
   const handleStart = async () => {
@@ -66,8 +78,12 @@ export default function Instructions() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           name: studentName,
-          email: studentEmail,
-          dob: studentDob
+          email: studentEmail || undefined,
+          dob: studentDob,
+          school: studentSchool || undefined,
+          // Absent for the standalone flow, which still resolves the single
+          // globally active quiz exactly as before.
+          quizSlug: quizSlug || undefined
         }),
       });
 
