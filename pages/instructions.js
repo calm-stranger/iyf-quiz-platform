@@ -2,10 +2,15 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 
-const QUIZ_DURATION_MINS = 25;
-const QUESTION_COUNT = 15;
+/*
+  Fallbacks only. The real numbers come from the quiz the student is about to
+  sit — see the fetch below. Hardcoding them means the page can promise 25
+  minutes while the timer gives 20, and the student plans around the wrong one.
+*/
+const FALLBACK_DURATION_MINS = 20;
+const FALLBACK_QUESTION_COUNT = 15;
 
-const rules = [
+const buildRules = (durationMins) => [
   {
     icon: '🚫',
     text: 'Do not switch browser tabs or open new tabs.',
@@ -24,7 +29,7 @@ const rules = [
   },
   {
     icon: '⏱️',
-    text: `You have ${QUIZ_DURATION_MINS} minutes. The quiz auto-submits when time runs out.`,
+    text: `You have ${durationMins} minutes. The quiz auto-submits when time runs out.`,
   },
   {
     icon: '✅',
@@ -39,6 +44,10 @@ export default function Instructions() {
   const [agreed, setAgreed] = useState(false);
   const [studentSchool, setStudentSchool] = useState('');
   const [quizSlug, setQuizSlug] = useState('');
+  const [durationMins, setDurationMins] = useState(FALLBACK_DURATION_MINS);
+  const [questionCount, setQuestionCount] = useState(FALLBACK_QUESTION_COUNT);
+
+  const rules = buildRules(durationMins);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const router = useRouter();
@@ -65,6 +74,16 @@ export default function Instructions() {
     setStudentDob(dob);
     setStudentSchool(school || '');
     setQuizSlug(slug || '');
+
+    fetch('/api/active-quiz' + (slug ? `?slug=${encodeURIComponent(slug)}` : ''))
+      .then((res) => res.json())
+      .then((data) => {
+        if (data?.durationMinutes) setDurationMins(data.durationMinutes);
+        if (data?.questionCount) setQuestionCount(data.questionCount);
+      })
+      .catch(() => {
+        /* keep the fallbacks — the numbers are guidance, /api/start is the gate */
+      });
   }, [router]);
 
   const handleStart = async () => {
@@ -155,11 +174,11 @@ export default function Instructions() {
           <div className="grid grid-cols-2 gap-3 mb-6">
             <div className="bg-white rounded-xl border border-[#E4E4E7] px-4 py-3 text-center">
               <p className="text-xs text-[#A1A1AA] mb-0.5">Duration</p>
-              <p className="font-semibold text-[#18181B]">{QUIZ_DURATION_MINS} minutes</p>
+              <p className="font-semibold text-[#18181B]">{durationMins} minutes</p>
             </div>
             <div className="bg-white rounded-xl border border-[#E4E4E7] px-4 py-3 text-center">
               <p className="text-xs text-[#A1A1AA] mb-0.5">Questions</p>
-              <p className="font-semibold text-[#18181B]">{QUESTION_COUNT} MCQs</p>
+              <p className="font-semibold text-[#18181B]">{questionCount} MCQs</p>
             </div>
           </div>
 
