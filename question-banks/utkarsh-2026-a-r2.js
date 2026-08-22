@@ -17,11 +17,11 @@ module.exports = [
     question: 'Who was the mother of Lord Rama?',
     options: [
       'Kausalya',
-      'Kaikeyi',
-      'Sumitra',
       'Sita',
+      'Radha',
+      'Kunti',
     ],
-    correct: 0, // Kausalya
+    correct: 0, // Kausalya — the co-wives removed as distractors
   },
   {
     id: 2,
@@ -115,12 +115,12 @@ module.exports = [
     id: 10,
     question: 'Who became the king of Lanka after Ravana was defeated?',
     options: [
-      'Hanuman',
       'Vibhishana',
-      'Kumbhakarna',
-      'Indrajit',
+      'Hanuman',
+      'Sugriva',
+      'Angada',
     ],
-    correct: 1, // Vibhishana
+    correct: 0, // Vibhishana — Ravana's brother and son removed
   },
   {
     id: 11,
@@ -137,12 +137,12 @@ module.exports = [
     id: 12,
     question: 'Who was the youngest among the five Pandavas?',
     options: [
-      'Arjuna',
-      'Nakula',
-      'Sahadeva',
+      'Yudhishthira',
       'Bhima',
+      'Arjuna',
+      'Sahadeva',
     ],
-    correct: 2, // Sahadeva
+    correct: 3, // Sahadeva — his twin Nakula removed as a distractor
   },
   {
     id: 13,

@@ -102,14 +102,14 @@ module.exports = [
   },
   {
     id: 9,
-    question: 'Who carried baby Krishna across the river Yamuna?',
+    question: 'Who carried baby Krishna across the river Yamuna on the night He was born?',
     options: [
-      'Nanda',
       'Vasudeva',
-      'Arjuna',
+      'Nanda',
       'Balarama',
+      'Akrura',
     ],
-    correct: 1, // Vasudeva
+    correct: 0, // Vasudeva
   },
   {
     id: 10,
@@ -135,14 +135,14 @@ module.exports = [
   },
   {
     id: 12,
-    question: 'Who was the teacher of the Pandavas and Kauravas?',
+    question: 'Who was the teacher of the Pandavas and the Kauravas?',
     options: [
-      'Krishna',
       'Dronacharya',
-      'Bhishma',
+      'Krishna',
       'Valmiki',
+      'Vyasadeva',
     ],
-    correct: 1, // Dronacharya
+    correct: 0, // Dronacharya — Bhishma removed as a distractor
   },
   {
     id: 13,
@@ -170,11 +170,11 @@ module.exports = [
     id: 15,
     question: 'Who was the king of the monkeys who became Lord Rama\'s friend?',
     options: [
-      'Vali',
       'Sugriva',
       'Jambavan',
       'Angada',
+      'Vibhishana',
     ],
-    correct: 1, // Sugriva
+    correct: 0, // Sugriva — Vali removed as a distractor
   },
 ];
