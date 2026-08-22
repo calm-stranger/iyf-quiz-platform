@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 
-const QUIZ_DURATION_MINS = 30;
-const QUESTION_COUNT = 25;
+const QUIZ_DURATION_MINS = 25;
+const QUESTION_COUNT = 15;
 
 const rules = [
   {
