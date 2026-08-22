@@ -96,14 +96,14 @@ module.exports = [
   },
   {
     id: 8,
-    question: 'Which demon did Lord Krishna defeat in the wrestling arena of Mathura?',
+    question: 'How many months Kumbhakarana used to sleep?',
     options: [
-      'Kamsa',
-      'Kaliya',
-      'Bakasura',
-      'Aghasura',
+      'Four',
+      'Six',
+      'Eight',
+      'Twelve',
     ],
-    correct: 0, // Kamsa
+    correct: 1, // Six
   },
   {
     id: 9,
@@ -173,13 +173,11 @@ module.exports = [
   },
   {
     id: 15,
-    question: 'Which serpent did Lord Krishna subdue by dancing on its hoods?',
+    question: 'Bali was killed by Rama?',
     options: [
-      'Aghasura',
-      'Kaliya',
-      'Bakasura',
-      'Dhenukasura',
+      'True',
+      'False',
     ],
-    correct: 1, // Kaliya — 'Yamuna' dropped, it answered Q6
+    correct: 0, // True
   },
 ];

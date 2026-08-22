@@ -97,12 +97,12 @@ module.exports = [
   },
   {
     id: 8,
-    question: 'Who is Krishna\'s dearest friend in Vrindavan?',
+    question: 'Who was Lord Rama?',
     options: [
-      'Radha',
-      'Sita',
-      'Kunti',
-      'Draupadi',
+      'The King of Ayodhya',
+      'The King of Lanka',
+      'A monkey',
+      'A demon',
     ],
     correct: 0, // Radha
   },
@@ -157,7 +157,7 @@ module.exports = [
       'Elephants',
       'Monkeys',
       'Birds',
-      'Fish',
+      'Humans',
     ],
     correct: 1, // Monkeys
   },
@@ -176,7 +176,7 @@ module.exports = [
     id: 15,
     question: 'What did Krishna lift to save the people of Vrindavan?',
     options: [
-      'A hill',
+      'A hill (Govardhan Hill)',
       'A tree',
       'A house',
       'A boat',

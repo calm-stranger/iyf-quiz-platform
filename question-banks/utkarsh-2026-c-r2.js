@@ -31,14 +31,14 @@ module.exports = [
   },
   {
     id: 2,
-    question: 'Assertion: Karna fought on the side of the Kauravas.\nReason: Duryodhana made him king of Anga and stood by him when others mocked his birth.',
+    question: 'Why did Krishna accept Sudama\'s humble offering?',
     options: [
-      'Both are true, and the reason explains the assertion',
-      'Both are true, but the reason does not explain the assertion',
-      'The assertion is true, but the reason is false',
-      'The assertion is false, but the reason is true',
+      'Sudama brought expensive gifts',
+      'Krishna valued the love and devotion with which it was offered',
+      'Sudama was a king',
+      'Krishna wanted to reward his family',
     ],
-    correct: 0, // Both are true, and the reason explains the assertion
+    correct: 1,
   },
   {
     id: 3,
@@ -75,36 +75,36 @@ module.exports = [
   },
   {
     id: 6,
-    question: 'Which of these is NOT one of the five Pandavas?',
+    question: 'Who was the Guru of the pandavas and kauravas?',
     options: [
-      'Nakula',
-      'Sahadeva',
-      'Ashwatthama',
-      'Yudhishthira',
+      'Dronacharya',
+      'Parshuram',
+      'Kripacharya',
+      'Bheeshma',
     ],
-    correct: 2, // Ashwatthama
+    correct: 0,
   },
   {
     id: 7,
-    question: 'Why did Sita undergo the test of fire after the war?',
+    question: 'Who was the chief queen of Krishna in Dwaraka?',
     options: [
-      'To prove her purity before the people',
-      'To obtain a boon',
-      'To punish Ravana',
-      'To become immortal',
+      'Radha',
+      'Rukmini',
+      'Satyabhama',
+      'Jambavati',
     ],
-    correct: 0, // To prove her purity before the people
+    correct: 1,
   },
   {
     id: 8,
-    question: 'Assertion: The Bhagavad-gita was spoken after the Kurukshetra war had ended.\nReason: Sanjaya described the events of the war to King Dhritarashtra.',
+    question: 'Assertion: Kumbhakarna slept for six months at a stretch.\nReason: When he asked Brahma for a boon, Saraswati changed the words on his tongue.',
     options: [
       'Both are true, and the reason explains the assertion',
       'Both are true, but the reason does not explain the assertion',
       'The assertion is true, but the reason is false',
       'The assertion is false, but the reason is true',
     ],
-    correct: 3, // The Gita was spoken BEFORE the war; the reason is true
+    correct: 0, // Both are true, and the reason explains the assertion
   },
   {
     id: 9,
@@ -130,25 +130,25 @@ module.exports = [
   },
   {
     id: 11,
-    question: 'Why did Krishna disappear in the middle of the rasa dance?',
+    question: 'Which demon took the form of a whirlwind and carried Krishna into the sky?',
     options: [
-      'Because Kamsa\'s soldiers had arrived',
-      'To curb the pride that had arisen among the gopis',
-      'Because the night had come to an end',
-      'Because Radha had asked Him to leave',
+      'Vatsasur',
+      'Putana',
+      'Trinavarta',
+      'Aghasur',
     ],
-    correct: 1, // To curb the pride that had arisen among the gopis
+    correct: 2, // Trinavarta
   },
   {
     id: 12,
-    question: 'How did Lanka come to be burnt by Hanuman?',
+    question: 'Where did Lord Krishna speak Bhagavad-gita?',
     options: [
-      'Rama commanded him to burn it',
-      'Ravana had his tail set alight, and Hanuman used it on the city',
-      'He set it alight hoping to kill Ravana',
-      'Vibhishana asked him to',
+      'On the battlefield of Kurukshetra',
+      'In the city of Dwaraka',
+      'In the forest of Vrindavan',
+      'In the palace of Hastinapur',
     ],
-    correct: 1, // Ravana had his tail set alight, and Hanuman used it on the
+    correct: 0, // On the battlefield of Kurukshetra
   },
   {
     id: 13,

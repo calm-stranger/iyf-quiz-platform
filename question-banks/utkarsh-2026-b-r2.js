@@ -74,58 +74,58 @@ module.exports = [
   },
   {
     id: 6,
-    question: 'Which is the correct order of Krishna\'s childhood pastimes?',
+    question: 'Which son of Devaki killed Kamsa?', // reframe it please 
     options: [
-      'Lifting Govardhan Hill - killing Putana - killing Kamsa',
-      'Killing Putana - lifting Govardhan Hill - killing Kamsa',
-      'Killing Kamsa - killing Putana - lifting Govardhan Hill',
-      'Killing Putana - killing Kamsa - lifting Govardhan Hill',
+      'first',
+      'eighth',
+      'fourth',
+      'nineth',
     ],
-    correct: 1, // Killing Putana - lifting Govardhan Hill - killing Kamsa
+    correct: 1, // eighth
   },
   {
     id: 7,
-    question: 'How many days did King Parikshit have left to live when he heard the Srimad Bhagavatam?',
+    question: 'How many steps of land Lord Vamana asked for?',
     options: [
-      'Three days',
-      'Five days',
-      'Seven days',
-      'Ten days',
+      'two steps of land',
+      'three steps of land',
+      'four steps of land',
+      'five steps of land',
     ],
-    correct: 2, // Seven days
+    correct: 1, // three steps of land
   },
   {
     id: 8,
-    question: 'Who narrated the Srimad Bhagavatam to King Parikshit?',
+    question: 'What was the name of Ravana\'s sister?',
     options: [
-      'Vyasadeva',
-      'Narada Muni',
-      'Sukadeva Goswami',
-      'Sanjaya',
+      'Shurpanakha',
+      'Kaikeyi',
+      'Mandodari',
+      'Sumitra',
     ],
-    correct: 2, // Sukadeva Goswami
+    correct: 0, // Surpanakha
   },
   {
     id: 9,
-    question: 'Which child devotee went to the forest to meditate upon Lord Vishnu?',
+    question: 'Who raised Lord Krsna in Gokul?',
     options: [
-      'Prahlada',
-      'Dhruva',
-      'Parikshit',
-      'Bharata',
+      'Nanda - Yashoda',
+      'Vasudev - Devaki',
+      'Damodar - Kunti',
+      'Jadubharata - Sumitra',
     ],
-    correct: 1, // Dhruva
+    correct: 0, // Dhruva
   },
   {
     id: 10,
-    question: 'What did Lord Vamana ask King Bali for?',
+    question: 'Where was Lord Krishna born ?',
     options: [
-      'Three steps of land',
-      'Three villages',
-      'Three treasures',
-      'Three wishes',
+      'Mathura',
+      'Vrindavan',
+      'Ayodhya',
+      'Gokul',
     ],
-    correct: 0, // Three steps of land
+    correct: 1, // To reclaim the three worlds from King Bali
   },
   {
     id: 11,
@@ -151,35 +151,35 @@ module.exports = [
   },
   {
     id: 13,
-    question: 'What did Hanuman bring back to Lord Rama to prove that he had found Sita?',
+    question: 'Which childhood friend visited Dwaraka to meet Krishna?',
     options: [
-      'Her ring',
-      'Her hair ornament',
-      'A letter from Sita',
-      'A branch from Ashoka grove',
+      'Sudama',
+      'Madhumangal',
+      'Arjuna',
+      'Bhima',
     ],
-    correct: 1, // Her hair ornament
+    correct: 0, // Sudama
   },
   {
     id: 14,
-    question: 'Why did Prahlada keep worshipping Lord Vishnu even though his father forbade it?',
+    question: 'What was the name of Prahlada\'s father?',
     options: [
-      'He wanted to become a king',
-      'He was a devoted follower of Lord Vishnu',
-      'He wanted to defeat his father',
-      'The royal soldiers had taught him to',
+      'Hiranyaksha',
+      'Hiranyakashipu',
+      'Kumbhakarna',
+      'Ravana',
     ],
-    correct: 1, // He was a devoted follower of Lord Vishnu
+    correct: 1, // Hiranyakashipu
   },
   {
     id: 15,
-    question: 'How did Lord Krishna protect the unborn Parikshit from the Brahmastra?',
+    question: 'What is the meaning of \'Krishna\'?',
     options: [
-      'He entered the womb and shielded him',
-      'He sent Garuda to protect him',
-      'He created a shield around the palace',
-      'He asked Arjuna to guard him',
+      'All attractive',
+      'Dark and Beautiful',
+      'Golden one',
+      'All of the above',
     ],
-    correct: 0, // He entered the womb and shielded him
+    correct: 0, // All of the above
   },
 ];

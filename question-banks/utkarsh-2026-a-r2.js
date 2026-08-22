@@ -20,14 +20,14 @@
 module.exports = [
   {
     id: 1,
-    question: 'In which city was Lord Krishna born?',
+    question: 'Who helped Lord Rama to find Sita?',
     options: [
-      'Ayodhya',
-      'Mathura',
-      'Lanka',
-      'Gokul',
+      'Hanuman',
+      'Lakshmana',
+      'Sugriva',
+      'Angada',
     ],
-    correct: 1, // Mathura
+    correct: 0, // Hanuman
   },
   {
     id: 2,
@@ -60,8 +60,7 @@ module.exports = [
       'Water',
       'Fruit',
     ],
-    correct: 0, // A healing herb — no longer names Hanuman, whose name was
-                // the answer to Q3
+    correct: 0, // A healing herb
   },
   {
     id: 5,
@@ -98,25 +97,25 @@ module.exports = [
   },
   {
     id: 8,
-    question: 'What did Lord Rama break at Sita\'s swayamvara?',
+    question: 'Who became the king of Lanka after Ravana was defeated?',
     options: [
-      'A great bow',
-      'A pot',
-      'A sword',
-      'A chariot',
+      'Vibhishana',
+      'Sugriva',
+      'Hanuman',
+      'Jatayu',
     ],
-    correct: 0, // A great bow
+    correct: 0, // Vibhishana
   },
   {
     id: 9,
-    question: 'What did the gopis do when Krishna played His flute?',
+    question: 'Who was Sita\'s father?',
     options: [
-      'They ran away',
-      'They fell asleep',
-      'They came to listen',
-      'They began to cry',
+      'Janaka',
+      'Janardana',
+      'Dasharatha',
+      'Vasudeva',
     ],
-    correct: 2, // They came to listen
+    correct: 0, // Janaka
   },
   {
     id: 10,
@@ -153,14 +152,14 @@ module.exports = [
   },
   {
     id: 13,
-    question: 'Which brother looked after Ayodhya while Rama was away?',
+    question: 'Which bird fought with Ravana?',
     options: [
-      'Bharata',
-      'Lakshmana',
-      'Shatrughna',
-      'Sugriva',
+      'Sampati',
+      'Garuda',
+      'Suka',
+      'Jatayu',
     ],
-    correct: 0, // Bharata
+    correct: 3,
   },
   {
     id: 14,

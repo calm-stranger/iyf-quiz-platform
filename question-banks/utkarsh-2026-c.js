@@ -75,14 +75,14 @@ module.exports = [
   },
   {
     id: 6,
-    question: 'Why did Krishna spare Kaliya and send him away rather than kill him?',
+    question: 'What was the weapon of Lord Krishna called?',
     options: [
-      'Kaliya\'s wives begged for his life, and Krishna showed mercy',
-      'Kaliya proved stronger than Krishna in the fight',
-      'Garuda had already promised Kaliya protection',
-      'Kaliya agreed to become a servant of Indra',
+      'Sudharsana Chakra',
+      'Pashupatastra',
+      'Brahmastra',
+      'Nandaka',
     ],
-    correct: 0, // Kaliya's wives begged for his life, and Krishna showed mer
+    correct: 0, // Sudharsana Chakra
   },
   {
     id: 7,
@@ -124,20 +124,20 @@ module.exports = [
       'Hanuman',
       'Angada',
       'Jambavan',
-      'Lakshmana',
+      'Vibhisana',
     ],
     correct: 3, // Vibhishana replaced: Q4 is about him joining Rama
   },
   {
     id: 11,
-    question: 'King Parikshit was cursed to die in seven days. How did he choose to spend them?',
+    question: 'Who was the maternal uncle of Krishna?',
     options: [
-      'Searching for a cure',
-      'Hearing the Srimad Bhagavatam from Sukadeva Goswami',
-      'Going to war against the sage who cursed him',
-      'Giving away his kingdom and going into hiding',
+      'Kamsa',
+      'Ugrasena',
+      'Vasudev',
+      'Nanda',
     ],
-    correct: 1, // Hearing the Srimad Bhagavatam from Sukadeva Goswami
+    correct: 0, // Kamsa
   },
   {
     id: 12,
@@ -152,14 +152,14 @@ module.exports = [
   },
   {
     id: 13,
-    question: 'Bhishma is remembered for a vow that shaped his whole life. What was it?',
+    question: 'Why did Yashoda tie Krishna with a rope?',
     options: [
-      'Never to fight in any war',
-      'Never to leave Hastinapura',
-      'Never to marry, so that his father could marry Satyavati',
-      'Never to speak to the Pandavas',
+      'He broke a pot and was mischievous',
+      'He was running out into the street and she was afraid he would get lost',
+      'He was fighting with the other cowherd boys',
+      'He had broken her cooking pots',
     ],
-    correct: 2, // Never to marry, so that his father could marry Satyavati
+    correct: 0,
   },
   {
     id: 14,
