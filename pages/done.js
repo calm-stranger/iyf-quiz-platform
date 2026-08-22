@@ -17,6 +17,7 @@ export default function Done() {
   const [finished, setFinished] = useState(null);   // which round just ended
   const [next, setNext] = useState(null);           // the round after it, if open
   const [starting, setStarting] = useState(false);
+  const [confirming, setConfirming] = useState(false);
   const [nextError, setNextError] = useState('');
 
   useEffect(() => {
@@ -168,20 +169,55 @@ export default function Done() {
                 </p>
               </div>
             ) : (
-              <div className="rounded-xl border border-[#1B3A9C] bg-white px-4 py-4">
-                <p className="text-sm font-medium text-[#18181B]">
-                  {next.label} is ready
-                </p>
-                <p className="mt-1 text-xs leading-relaxed text-[#71717A]">
-                  {next.questions} questions. You do not need to enter your details again.
-                </p>
-                <button
-                  onClick={startNextRound}
-                  disabled={starting}
-                  className="mt-3 w-full rounded-xl bg-[#1B3A9C] py-3 text-sm font-medium text-white transition-colors hover:bg-[#16307f] disabled:opacity-40"
-                >
-                  {starting ? 'Starting…' : `Start ${next.label} →`}
-                </button>
+              <div className="rounded-xl border border-[#1B3A9C] bg-white px-4 py-4 text-left">
+                {!confirming ? (
+                  <>
+                    <p className="text-sm font-medium text-[#18181B]">
+                      {next.label} is ready
+                    </p>
+                    <p className="mt-1 text-xs leading-relaxed text-[#71717A]">
+                      {next.questions} questions. You do not need to enter your details again.
+                    </p>
+                    <button
+                      onClick={() => setConfirming(true)}
+                      className="mt-3 w-full rounded-xl bg-[#1B3A9C] py-3 text-sm font-medium text-white transition-colors hover:bg-[#16307f]"
+                    >
+                      Go to {next.label} →
+                    </button>
+                  </>
+                ) : (
+                  /*
+                    A deliberate stop before the timer starts. A child who taps
+                    the wrong thing on a phone should not find themselves three
+                    minutes into a timed round they did not mean to open, and
+                    there is no way back once it has begun.
+                  */
+                  <>
+                    <p className="text-sm font-medium text-[#18181B]">
+                      Ready to begin {next.label}?
+                    </p>
+                    <ul className="mt-2 space-y-1.5 text-xs leading-relaxed text-[#52525B]">
+                      <li>• {next.questions} questions.</li>
+                      <li>• The timer starts the moment you begin.</li>
+                      <li>• You cannot go back to {finished?.label || 'the previous round'}.</li>
+                      <li>• Do not switch apps or leave this page once you start.</li>
+                    </ul>
+                    <button
+                      onClick={startNextRound}
+                      disabled={starting}
+                      className="mt-3 w-full rounded-xl bg-[#1B3A9C] py-3 text-sm font-medium text-white transition-colors hover:bg-[#16307f] disabled:opacity-40"
+                    >
+                      {starting ? 'Starting…' : `Yes, begin ${next.label}`}
+                    </button>
+                    <button
+                      onClick={() => setConfirming(false)}
+                      disabled={starting}
+                      className="mt-2 w-full rounded-xl border border-[#D4D4D8] py-2.5 text-sm font-medium text-[#3F3F46] disabled:opacity-40"
+                    >
+                      Not yet
+                    </button>
+                  </>
+                )}
                 {nextError ? (
                   <p className="mt-2 text-xs text-red-500">{nextError}</p>
                 ) : null}
