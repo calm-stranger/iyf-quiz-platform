@@ -313,7 +313,12 @@ export default function Admin() {
                 </div>
 
                 {selectedQuiz && (
-                  <div className="flex flex-wrap gap-2 mt-4 pt-4 border-t border-[#F4F4F5]">
+                  <div className="mt-4 pt-4 border-t border-[#F4F4F5]">
+                    <p className="mb-2 text-xs text-[#71717A]">
+                      Acting on <span className="font-medium text-[#18181B]">{selectedQuiz.title}</span>
+                      {' — '}{selectedQuiz.questionCount || 0} question(s)
+                    </p>
+                  <div className="flex flex-wrap gap-2">
                     <select
                       value={selectedBank}
                       onChange={(e) => setSelectedBank(e.target.value)}
@@ -327,14 +332,37 @@ export default function Admin() {
                       ))}
                     </select>
                     <button
-                      onClick={() =>
-                        adminAction({ action: 'import_bank', quizId: selectedQuiz.id, bank: selectedBank })
-                      }
+                      onClick={() => {
+                        const bank = banks.find((x) => x.key === selectedBank);
+                        // Name BOTH sides. The bank comes from the dropdown and
+                        // the target from the selected card, and mixing the two
+                        // up is what puts a Round 1 bank into a Round 2 quiz.
+                        if (
+                          !confirm(
+                            `Import "${bank?.label ?? selectedBank}" (${bank?.count ?? '?'} questions)\n` +
+                            `into: ${selectedQuiz.title}\n\n` +
+                            `This REPLACES the ${selectedQuiz.questionCount || 0} question(s) currently in that quiz.`
+                          )
+                        ) return;
+                        adminAction({ action: 'import_bank', quizId: selectedQuiz.id, bank: selectedBank });
+                      }}
                       disabled={loading || !selectedBank}
                       className="px-3 py-2 text-xs border border-[#D4D4D8] rounded-lg hover:bg-[#F4F4F5] disabled:opacity-40"
                     >
-                      Import questions
+                      Import into this quiz
                     </button>
+                    {selectedQuiz.questionCount > 0 ? (
+                      <button
+                        onClick={() => {
+                          if (!confirm(`Remove all ${selectedQuiz.questionCount} questions from "${selectedQuiz.title}"?`)) return;
+                          adminAction({ action: 'clear_questions', quizId: selectedQuiz.id });
+                        }}
+                        disabled={loading}
+                        className="px-3 py-2 text-xs border border-red-300 text-red-700 rounded-lg hover:bg-red-50 disabled:opacity-40"
+                      >
+                        Clear questions
+                      </button>
+                    ) : null}
                     <button
                       onClick={() => adminAction({ action: 'set_status', quizId: selectedQuiz.id, status: 'active' })}
                       disabled={loading}
@@ -349,6 +377,7 @@ export default function Admin() {
                     >
                       Close
                     </button>
+                    </div>
                   </div>
                 )}
               </div>

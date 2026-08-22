@@ -98,7 +98,8 @@ export default async function handler(req, res) {
         if (!questions.length) {
           return res.status(400).json({ error: 'That bank has no questions in it yet.' });
         }
-        const imported = await db.importQuestions(req.body.quizId, questions);
+        // Replaces, so importing twice cannot double the paper.
+        const imported = await db.replaceQuestions(req.body.quizId, questions);
         return res.status(200).json({ imported: imported.length });
       }
 
@@ -106,6 +107,12 @@ export default async function handler(req, res) {
         if (!req.body.quizId) return res.status(400).json({ error: 'quizId is required.' });
         const questions = await db.importQuestions(req.body.quizId, fallbackQuestions);
         return res.status(200).json({ imported: questions.length });
+      }
+
+      if (action === 'clear_questions') {
+        if (!req.body.quizId) return res.status(400).json({ error: 'quizId is required.' });
+        await db.deleteQuizQuestions(req.body.quizId);
+        return res.status(200).json({ cleared: true });
       }
 
       if (action === 'set_status') {
