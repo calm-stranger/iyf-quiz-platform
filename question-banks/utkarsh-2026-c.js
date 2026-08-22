@@ -1,18 +1,20 @@
 /**
  * Utkarsh 2026 — Vedic Quiz — Group C (Class 8-10) — Round 1
  *
- * Rewritten to test understanding rather than recall of obscure detail.
- * The mix is deliberate: reasoning ("why did X do Y"), sequence, assertion
- * and reason, application of a teaching to an ordinary situation, and
- * odd-one-out — the formats a Class 8-10 student already meets at school.
+ * Weighted toward Krishna-leela and Rama-leela rather than abstract
+ * philosophy, and pitched at the harder end: the pastimes themselves are
+ * the subject, with a few from the Mahabharata.
  *
- * Assertion-and-reason items put the two statements on separate lines. The
- * four options are the same four judgements every time, so the format is
- * never the puzzle — though the platform shuffles their order per student,
- * so a student cannot pass on "the answer is B".
+ * The formats are the ones a Class 8-10 student already meets at school —
+ * reasoning, sequence, assertion and reason, application, odd-one-out — so
+ * a question is hard because the answer is worth knowing, not because it
+ * turns on a name a student either happens to have memorised or has not.
  *
- * `correct` is the 0-based index into `options` AS LISTED HERE. The platform
- * shuffles options per student and maps the answer across.
+ * Assertion-and-reason items hold the two statements on separate lines and
+ * always offer the same four judgements, so the format is never the puzzle.
+ * The platform shuffles their order per student.
+ *
+ * `correct` is the 0-based index into `options` AS LISTED HERE.
  */
 
 module.exports = [
@@ -29,7 +31,7 @@ module.exports = [
   },
   {
     id: 2,
-    question: 'Assertion: Krishna tells Arjuna that the soul can never be killed.\nReason: The soul is eternal, and only the body is destroyed.',
+    question: 'Assertion: However many ropes Mother Yashoda joined together, she could not bind Krishna.\nReason: Krishna is bound by love, never by force.',
     options: [
       'Both are true, and the reason explains the assertion',
       'Both are true, but the reason does not explain the assertion',
@@ -47,7 +49,7 @@ module.exports = [
       'The bridge is built - the exile - Sita is taken - Ravana is defeated',
       'The exile - the bridge is built - Sita is taken - Ravana is defeated',
     ],
-    correct: 1, // The exile - Sita is taken - the bridge is built - Ravana is 
+    correct: 1, // The exile - Sita is taken - the bridge is built - Ravana i
   },
   {
     id: 4,
@@ -58,29 +60,29 @@ module.exports = [
       'He advised Ravana to return Sita and was insulted for saying so',
       'Rama had promised him a kingdom',
     ],
-    correct: 2, // He advised Ravana to return Sita and was insulted for saying
+    correct: 2, // He advised Ravana to return Sita and was insulted for sayi
   },
   {
     id: 5,
-    question: '\'You have a right to your work, but never to its results.\' A student who truly followed this would:',
+    question: 'Why did Bharata place Lord Rama\'s sandals upon the throne of Ayodhya?',
     options: [
-      'Study only if a good result was guaranteed',
-      'Study sincerely, without being paralysed by worry about marks',
-      'Stop studying, since the results do not matter',
-      'Study only the subjects they enjoy',
+      'To remind the people daily of Rama\'s exile',
+      'Because Kaikeyi instructed him to do so',
+      'To rule as Rama\'s servant rather than as king in his own right',
+      'Because sage Vasishtha crowned the sandals',
     ],
-    correct: 1, // Study sincerely, without being paralysed by worry about mark
+    correct: 2, // To rule as Rama's servant rather than as king in his own r
   },
   {
     id: 6,
-    question: 'At what point in the Mahabharata is the Bhagavad-gita spoken?',
+    question: 'Why did Krishna spare Kaliya and send him away rather than kill him?',
     options: [
-      'After the war, in Hastinapura',
-      'During the Pandavas\' exile in the forest',
-      'On the battlefield, just before the war begins',
-      'At Draupadi\'s swayamvara',
+      'Kaliya\'s wives begged for his life, and Krishna showed mercy',
+      'Kaliya proved stronger than Krishna in the fight',
+      'Garuda had already promised Kaliya protection',
+      'Kaliya agreed to become a servant of Indra',
     ],
-    correct: 2, // On the battlefield, just before the war begins
+    correct: 0, // Kaliya's wives begged for his life, and Krishna showed mer
   },
   {
     id: 7,
@@ -117,14 +119,14 @@ module.exports = [
   },
   {
     id: 10,
-    question: 'Which of these is NOT one of the four Vedas?',
+    question: 'Which of these did NOT take part in the search for Sita?',
     options: [
-      'Rig Veda',
-      'Sama Veda',
-      'Ayur Veda',
-      'Atharva Veda',
+      'Hanuman',
+      'Angada',
+      'Jambavan',
+      'Vibhishana',
     ],
-    correct: 2, // Ayur Veda
+    correct: 3, // Vibhishana
   },
   {
     id: 11,
@@ -168,7 +170,7 @@ module.exports = [
       'Born in Dwaraka - raised in Mathura - went to Gokul',
       'Born in Vrindavan - raised in Dwaraka - killed Kamsa',
     ],
-    correct: 1, // Born in Mathura - raised in Gokul - returned to Mathura and 
+    correct: 1, // Born in Mathura - raised in Gokul - returned to Mathura an
   },
   {
     id: 15,

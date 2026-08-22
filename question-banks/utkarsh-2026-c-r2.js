@@ -1,18 +1,20 @@
 /**
  * Utkarsh 2026 — Vedic Quiz — Group C (Class 8-10) — Round 2
  *
- * Rewritten to test understanding rather than recall of obscure detail.
- * The mix is deliberate: reasoning ("why did X do Y"), sequence, assertion
- * and reason, application of a teaching to an ordinary situation, and
- * odd-one-out — the formats a Class 8-10 student already meets at school.
+ * Weighted toward Krishna-leela and Rama-leela rather than abstract
+ * philosophy, and pitched at the harder end: the pastimes themselves are
+ * the subject, with a few from the Mahabharata.
  *
- * Assertion-and-reason items put the two statements on separate lines. The
- * four options are the same four judgements every time, so the format is
- * never the puzzle — though the platform shuffles their order per student,
- * so a student cannot pass on "the answer is B".
+ * The formats are the ones a Class 8-10 student already meets at school —
+ * reasoning, sequence, assertion and reason, application, odd-one-out — so
+ * a question is hard because the answer is worth knowing, not because it
+ * turns on a name a student either happens to have memorised or has not.
  *
- * `correct` is the 0-based index into `options` AS LISTED HERE. The platform
- * shuffles options per student and maps the answer across.
+ * Assertion-and-reason items hold the two statements on separate lines and
+ * always offer the same four judgements, so the format is never the puzzle.
+ * The platform shuffles their order per student.
+ *
+ * `correct` is the 0-based index into `options` AS LISTED HERE.
  */
 
 module.exports = [
@@ -25,7 +27,7 @@ module.exports = [
       'He gave the kingdom away willingly',
       'His father exiled him',
     ],
-    correct: 1, // He staked more and more in a game of dice, including himself
+    correct: 1, // He staked more and more in a game of dice, including himse
   },
   {
     id: 2,
@@ -40,14 +42,14 @@ module.exports = [
   },
   {
     id: 3,
-    question: 'Which is the correct order of the four yugas?',
+    question: 'Which is the correct order of Krishna\'s Vrindavan pastimes?',
     options: [
-      'Kali - Dvapara - Treta - Satya',
-      'Treta - Satya - Kali - Dvapara',
-      'Satya - Treta - Dvapara - Kali',
-      'Dvapara - Treta - Satya - Kali',
+      'Lifting Govardhan - killing Putana - killing Aghasura - leaving for Mathura',
+      'Killing Putana - killing Aghasura - lifting Govardhan - leaving for Mathura',
+      'Killing Aghasura - lifting Govardhan - killing Putana - leaving for Mathura',
+      'Leaving for Mathura - killing Putana - killing Aghasura - lifting Govardhan',
     ],
-    correct: 2, // Satya - Treta - Dvapara - Kali
+    correct: 1, // Killing Putana - killing Aghasura - lifting Govardhan - Mathura
   },
   {
     id: 4,
@@ -58,18 +60,18 @@ module.exports = [
       'Because He wished to test Prahlada',
       'Because Brahma requested that particular form',
     ],
-    correct: 1, // Because Hiranyakashipu's boon protected him from man and ani
+    correct: 1, // Because Hiranyakashipu's boon protected him from man and a
   },
   {
     id: 5,
-    question: 'Someone does their duty well but is constantly anxious about praise and blame. According to the Gita, what are they missing?',
+    question: 'Why did Indra send torrential rain upon Vrindavan?',
     options: [
-      'Knowledge of the scriptures',
-      'Physical strength',
-      'Steadiness of mind in success and failure',
-      'A qualified teacher',
+      'To test Krishna\'s strength',
+      'Because the residents had stopped his yearly sacrifice on Krishna\'s advice',
+      'Because Kamsa had asked him to',
+      'To wash away the demons hiding in the forest',
     ],
-    correct: 2, // Steadiness of mind in success and failure
+    correct: 1, // Because the residents had stopped his yearly sacrifice on 
   },
   {
     id: 6,
@@ -95,14 +97,14 @@ module.exports = [
   },
   {
     id: 8,
-    question: 'Assertion: The Bhagavad-gita has eighteen chapters.\nReason: The Kurukshetra war lasted eighteen days.',
+    question: 'Assertion: Kumbhakarna slept for six months at a stretch.\nReason: When he asked Brahma for a boon, Saraswati changed the words on his tongue.',
     options: [
       'Both are true, and the reason explains the assertion',
       'Both are true, but the reason does not explain the assertion',
       'The assertion is true, but the reason is false',
       'The assertion is false, but the reason is true',
     ],
-    correct: 1, // Both are true, but the reason does not explain the assertion
+    correct: 0, // Both are true, and the reason explains the assertion
   },
   {
     id: 9,
@@ -113,29 +115,29 @@ module.exports = [
       'The exile - the game of dice - the Pandavas rule - the Kurukshetra war',
       'The game of dice - the Kurukshetra war - the exile - the Pandavas rule',
     ],
-    correct: 0, // The game of dice - the exile - the Kurukshetra war - the Pan
+    correct: 0, // The game of dice - the exile - the Kurukshetra war - the P
   },
   {
     id: 10,
-    question: 'Why is it significant that the Bhagavad-gita was spoken on a battlefield rather than in a temple?',
+    question: 'Why was Abhimanyu unable to come out of the chakravyuha?',
     options: [
-      'Because there was no temple nearby',
-      'Because it shows that spiritual knowledge applies in the middle of real duty and difficulty',
-      'Because Arjuna refused to enter a temple',
-      'Because battlefields were considered sacred places',
+      'His chariot was destroyed at the entrance',
+      'Arjuna had forbidden him to go in',
+      'He had learnt how to enter the formation but not how to break out of it',
+      'He chose to remain inside and fight',
     ],
-    correct: 1, // Because it shows that spiritual knowledge applies in the mid
+    correct: 2, // He had learnt how to enter the formation but not how to br
   },
   {
     id: 11,
-    question: 'The Bhagavad-gita describes three gunas, or qualities of material nature. Which are they?',
+    question: 'Why did Krishna disappear in the middle of the rasa dance?',
     options: [
-      'Dharma, artha and kama',
-      'Karma, jnana and bhakti',
-      'Sattva, rajas and tamas',
-      'Brahma, Vishnu and Shiva',
+      'Because Kamsa\'s soldiers had arrived',
+      'To curb the pride that had arisen among the gopis',
+      'Because the night had come to an end',
+      'Because Radha had asked Him to leave',
     ],
-    correct: 2, // Sattva, rajas and tamas
+    correct: 1, // To curb the pride that had arisen among the gopis
   },
   {
     id: 12,
@@ -146,18 +148,18 @@ module.exports = [
       'He set it alight hoping to kill Ravana',
       'Vibhishana asked him to',
     ],
-    correct: 1, // Ravana had his tail set alight, and Hanuman used it on the c
+    correct: 1, // Ravana had his tail set alight, and Hanuman used it on the
   },
   {
     id: 13,
-    question: '\'Whatever you do, whatever you eat, do it as an offering to Me.\' Which practice most directly reflects this teaching?',
+    question: 'Who first told the searching monkeys where Sita was being held?',
     options: [
-      'Reading aloud every morning',
-      'Fasting on every festival day',
-      'Travelling to holy places',
-      'Offering food to the Lord before eating it',
+      'Jatayu',
+      'Sampati',
+      'Vibhishana',
+      'Trijata',
     ],
-    correct: 3, // Offering food to the Lord before eating it
+    correct: 1, // Sampati
   },
   {
     id: 14,
@@ -179,6 +181,6 @@ module.exports = [
       'It was written by many different authors',
       'It describes a large number of kingdoms',
     ],
-    correct: 1, // It carries teachings on duty, ethics and devotion, including
+    correct: 1, // It carries teachings on duty, ethics and devotion, includi
   },
 ];
