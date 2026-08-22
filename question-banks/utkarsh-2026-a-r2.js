@@ -157,14 +157,14 @@ module.exports = [
   },
   {
     id: 14,
-    question: 'Who helped Lord Rama reach Lanka?',
+    question: 'How many brothers did Lord Rama have?',
     options: [
-      'Hanuman',
-      'Kamsa',
-      'Duryodhana',
-      'Shakuni',
+      'Two',
+      'Three',
+      'Four',
+      'Five',
     ],
-    correct: 0, // Hanuman
+    correct: 1, // Three — Lakshmana, Bharata and Shatrughna
   },
   {
     id: 15,

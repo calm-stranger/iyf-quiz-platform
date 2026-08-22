@@ -157,14 +157,14 @@ module.exports = [
   },
   {
     id: 14,
-    question: 'Who was the demon upon whom Lord Krishna danced after subduing him in the Yamuna?',
+    question: 'How many cantos does the Srimad Bhagavatam have?',
     options: [
-      'Aghasura',
-      'Kaliya',
-      'Bakasura',
-      'Dhenukasura',
+      'Ten',
+      'Twelve',
+      'Sixteen',
+      'Eighteen',
     ],
-    correct: 1, // Kaliya
+    correct: 1, // Twelve
   },
   {
     id: 15,

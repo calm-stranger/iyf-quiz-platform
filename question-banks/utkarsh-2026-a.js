@@ -157,24 +157,24 @@ module.exports = [
   },
   {
     id: 14,
-    question: 'Who was the elder brother of Lord Krishna?',
+    question: 'Which bird tried to stop Ravana from taking Sita away?',
     options: [
-      'Arjuna',
-      'Balarama',
-      'Sudama',
-      'Abhimanyu',
+      'Jatayu',
+      'Garuda',
+      'Sugriva',
+      'Angada',
     ],
-    correct: 1, // Balarama
+    correct: 0, // Jatayu
   },
   {
     id: 15,
-    question: 'Who went with Lord Rama when he went to the forest?',
+    question: 'Who was the king of the monkeys who became Lord Rama\'s friend?',
     options: [
-      'Lakshmana and Sita',
-      'Krishna and Radha',
-      'Bharata and Shatrughna',
-      'Hanuman and Sugriva',
+      'Vali',
+      'Sugriva',
+      'Jambavan',
+      'Angada',
     ],
-    correct: 0, // Lakshmana and Sita
+    correct: 1, // Sugriva
   },
 ];
