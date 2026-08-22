@@ -1,20 +1,25 @@
 /**
  * Utkarsh 2026 — Vedic Quiz — Group B (Class 5-7) — Round 1
  *
- * 15 questions, transcribed from the printed paper.
+ * Mostly plain single-answer recall, with four questions in other formats:
+ * two that ask WHY, one sequence, one odd-one-out. Deliberately fewer than
+ * Group C, and no assertion-and-reason at all — that format is not usually
+ * met before Class 9, and a question should never be hard because of its
+ * shape.
+ *
+ * Weighted toward Krishna-leela and Rama-leela, and away from the obscure
+ * recall this paper used to lean on (the name of Prahlada's mother, of the
+ * sage who cursed Parikshit) — those test whether a child happened to
+ * memorise a name, not whether they know the story.
  *
  * `correct` is the 0-based index into `options` AS LISTED HERE. The platform
- * shuffles the options per student and maps the answer across, so the order
- * below is only the reference order — do not renumber it by hand.
- *
- * The source PDF carried no answer key, so these were filled in separately.
- * Check them before the event: a wrong index marks every student wrong.
+ * shuffles options per student and maps the answer across.
  */
 
 module.exports = [
   {
     id: 1,
-    question: 'Where was the Bhagavad Gita spoken?',
+    question: 'Where was the Bhagavad-gita spoken?',
     options: [
       'Dwaraka',
       'Kurukshetra',
@@ -25,18 +30,7 @@ module.exports = [
   },
   {
     id: 2,
-    question: 'How many chapters are there in the Bhagavad Gita?',
-    options: [
-      '12',
-      '16',
-      '18',
-      '20',
-    ],
-    correct: 2, // 18
-  },
-  {
-    id: 3,
-    question: 'To whom was the Bhagavad Gita spoken?',
+    question: 'To whom was the Bhagavad-gita spoken?',
     options: [
       'Yudhishthira',
       'Sanjaya',
@@ -46,8 +40,8 @@ module.exports = [
     correct: 2, // Arjuna
   },
   {
-    id: 4,
-    question: 'The Bhagavad Gita is a part of which epic?',
+    id: 3,
+    question: 'The Bhagavad-gita is part of which epic?',
     options: [
       'Ramayana',
       'Mahabharata',
@@ -57,15 +51,26 @@ module.exports = [
     correct: 1, // Mahabharata
   },
   {
-    id: 5,
-    question: 'Who narrated the events of the Kurukshetra war to King Dhritarashtra?',
+    id: 4,
+    question: 'Which demoness came to kill baby Krishna disguised as a nurse?',
     options: [
-      'Bhishma',
-      'Vidura',
-      'Sanjaya',
-      'Dronacharya',
+      'Putana',
+      'Surpanakha',
+      'Tataka',
+      'Holika',
     ],
-    correct: 2, // Sanjaya
+    correct: 0, // Putana
+  },
+  {
+    id: 5,
+    question: 'Why did Kamsa try to kill baby Krishna?',
+    options: [
+      'Krishna had stolen butter from his palace',
+      'A prophecy said the eighth son of Devaki would kill him',
+      'He wanted Vasudeva\'s kingdom',
+      'The people of Mathura had asked him to',
+    ],
+    correct: 1, // A prophecy said the eighth son of Devaki would kill him
   },
   {
     id: 6,
@@ -91,17 +96,6 @@ module.exports = [
   },
   {
     id: 8,
-    question: 'Who was the mother of Prahlada?',
-    options: [
-      'Devaki',
-      'Aditi',
-      'Kayadhu',
-      'Rohini',
-    ],
-    correct: 2, // Kayadhu
-  },
-  {
-    id: 9,
     question: 'Which demon did Lord Krishna defeat in the wrestling arena of Mathura?',
     options: [
       'Kamsa',
@@ -112,30 +106,30 @@ module.exports = [
     correct: 0, // Kamsa
   },
   {
+    id: 9,
+    question: 'Which of these was NOT a brother of Lord Rama?',
+    options: [
+      'Lakshmana',
+      'Bharata',
+      'Sugriva',
+      'Shatrughna',
+    ],
+    correct: 2, // Sugriva
+  },
+  {
     id: 10,
     question: 'How many Vedas are there?',
     options: [
-      '3',
-      '4',
-      '5',
-      '6',
+      'Three',
+      'Four',
+      'Five',
+      'Six',
     ],
-    correct: 1, // 4
+    correct: 1, // Four
   },
   {
     id: 11,
-    question: 'Which is the oldest of the four Vedas?',
-    options: [
-      'Sama Veda',
-      'Yajur Veda',
-      'Atharva Veda',
-      'Rig Veda',
-    ],
-    correct: 3, // Rig Veda
-  },
-  {
-    id: 12,
-    question: 'What does the name "Bhagavad Gita" commonly mean?',
+    question: 'What does the name \'Bhagavad-gita\' mean?',
     options: [
       'Song of God',
       'Story of God',
@@ -145,8 +139,8 @@ module.exports = [
     correct: 0, // Song of God
   },
   {
-    id: 13,
-    question: 'What food is Lord Krishna famously known for loving as a child?',
+    id: 12,
+    question: 'What food was Lord Krishna famous for loving as a child?',
     options: [
       'Kheer',
       'Laddoo',
@@ -156,19 +150,30 @@ module.exports = [
     correct: 2, // Butter
   },
   {
-    id: 14,
-    question: 'How did Arjuna feel when he saw his relatives and teachers on the battlefield?',
+    id: 13,
+    question: 'Why did Lord Rama go to the forest for fourteen years?',
     options: [
-      'Angry and determined',
-      'Confused and distressed',
-      'Happy and excited',
-      'Calm and fearless',
+      'He wanted to meet the sages',
+      'His father Dasaratha had promised Kaikeyi a boon',
+      'Ravana had challenged him',
+      'He was searching for Sita',
     ],
-    correct: 1, // Confused and distressed
+    correct: 1, // His father Dasaratha had promised Kaikeyi a boon
+  },
+  {
+    id: 14,
+    question: 'Which is the correct order of events in the Ramayana?',
+    options: [
+      'Rama breaks the bow - the exile - Sita is taken - Ravana is defeated',
+      'The exile - Rama breaks the bow - Sita is taken - Ravana is defeated',
+      'Sita is taken - Rama breaks the bow - the exile - Ravana is defeated',
+      'Rama breaks the bow - Sita is taken - the exile - Ravana is defeated',
+    ],
+    correct: 0, // Rama breaks the bow - the exile - Sita is taken - Ravana i
   },
   {
     id: 15,
-    question: 'Which demon was defeated by Lord Krishna after he danced on its hoods in the Yamuna?',
+    question: 'Which demon did Lord Krishna subdue by dancing on its hoods in the Yamuna?',
     options: [
       'Aghasura',
       'Kaliya',

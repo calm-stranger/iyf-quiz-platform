@@ -1,20 +1,25 @@
 /**
  * Utkarsh 2026 — Vedic Quiz — Group B (Class 5-7) — Round 2
  *
- * 15 questions, transcribed from the printed paper.
+ * Mostly plain single-answer recall, with four questions in other formats:
+ * two that ask WHY, one sequence, one odd-one-out. Deliberately fewer than
+ * Group C, and no assertion-and-reason at all — that format is not usually
+ * met before Class 9, and a question should never be hard because of its
+ * shape.
+ *
+ * Weighted toward Krishna-leela and Rama-leela, and away from the obscure
+ * recall this paper used to lean on (the name of Prahlada's mother, of the
+ * sage who cursed Parikshit) — those test whether a child happened to
+ * memorise a name, not whether they know the story.
  *
  * `correct` is the 0-based index into `options` AS LISTED HERE. The platform
- * shuffles the options per student and maps the answer across, so the order
- * below is only the reference order — do not renumber it by hand.
- *
- * The source PDF carried no answer key, so these were filled in separately.
- * Check them before the event: a wrong index marks every student wrong.
+ * shuffles options per student and maps the answer across.
  */
 
 module.exports = [
   {
     id: 1,
-    question: 'Who was the brother of Ravana who helped Lord Rama?',
+    question: 'Who was the brother of Ravana who joined Lord Rama?',
     options: [
       'Kumbhakarna',
       'Indrajit',
@@ -25,14 +30,14 @@ module.exports = [
   },
   {
     id: 2,
-    question: 'Who was the father of Lord Rama?',
+    question: 'Who set Lanka on fire with his burning tail?',
     options: [
-      'Janaka',
-      'Dasaratha',
-      'Vishwamitra',
-      'Vibhishana',
+      'Angada',
+      'Hanuman',
+      'Jambavan',
+      'Sugriva',
     ],
-    correct: 1, // Dasaratha
+    correct: 1, // Hanuman
   },
   {
     id: 3,
@@ -47,7 +52,7 @@ module.exports = [
   },
   {
     id: 4,
-    question: 'Who was the eldest among the five Pandavas?',
+    question: 'Who was the eldest of the five Pandavas?',
     options: [
       'Bhima',
       'Arjuna',
@@ -58,25 +63,25 @@ module.exports = [
   },
   {
     id: 5,
-    question: 'Who was the mother of Kapila Muni?',
+    question: 'Why did Hanuman carry an entire mountain to Lanka?',
     options: [
-      'Devahuti',
-      'Kunti',
-      'Sita',
-      'Sumitra',
+      'To block Ravana\'s army',
+      'Because he could not tell which of the herbs was the right one',
+      'To build the bridge across the sea',
+      'Because Rama had asked for the mountain itself',
     ],
-    correct: 0, // Devahuti
+    correct: 1, // Because he could not tell which of the herbs was the right
   },
   {
     id: 6,
-    question: 'Which incarnation of Lord Vishnu killed Hiranyaksha?',
+    question: 'Which is the correct order of Krishna\'s childhood pastimes?',
     options: [
-      'Narasimha',
-      'Varaha',
-      'Vamana',
-      'Kalki',
+      'Lifting Govardhan Hill - killing Putana - killing Kamsa',
+      'Killing Putana - lifting Govardhan Hill - killing Kamsa',
+      'Killing Kamsa - killing Putana - lifting Govardhan Hill',
+      'Killing Putana - killing Kamsa - lifting Govardhan Hill',
     ],
-    correct: 1, // Varaha
+    correct: 1, // Killing Putana - lifting Govardhan Hill - killing Kamsa
   },
   {
     id: 7,
@@ -84,58 +89,58 @@ module.exports = [
     options: [
       'Parikshit',
       'Arjuna',
-      'Bhima',
       'Yudhishthira',
+      'Dhritarashtra',
     ],
     correct: 0, // Parikshit
   },
   {
     id: 8,
-    question: 'Which demon came to kill Krishna when he was just a small child?',
+    question: 'Who narrated the Srimad Bhagavatam to King Parikshit?',
     options: [
-      'Putana',
-      'Aghasura',
-      'Bakasura',
-      'Vatsasura',
+      'Vyasadeva',
+      'Narada Muni',
+      'Sukadeva Goswami',
+      'Sanjaya',
     ],
     correct: 2, // Sukadeva Goswami
   },
   {
     id: 9,
-    question: 'Which child devotee is famous for meditating upon Lord Vishnu in the forest?',
+    question: 'Which child devotee went to the forest to meditate upon Lord Vishnu?',
     options: [
       'Prahlada',
       'Dhruva',
       'Parikshit',
-      'Abhimanyu',
+      'Bharata',
     ],
     correct: 1, // Dhruva
   },
   {
     id: 10,
-    question: 'Krishna spent most of his childhood in which place?',
+    question: 'What did Lord Vamana ask King Bali for?',
     options: [
-      'Mathura',
-      'Vrindavana',
-      'Gokula',
-      'Kurukshetra',
+      'Three steps of land',
+      'Three villages',
+      'Three treasures',
+      'Three wishes',
     ],
-    correct: 2, // Gokula
+    correct: 0, // Three steps of land
   },
   {
     id: 11,
-    question: 'Which demon disguised himself as a calf during Krishna\'s childhood pastimes?',
+    question: 'Which of these was NOT a demon defeated by Lord Krishna?',
     options: [
-      'Aghasura',
+      'Putana',
       'Bakasura',
-      'Vatsasura',
-      'Dhenukasura',
+      'Ravana',
+      'Aghasura',
     ],
-    correct: 2, // Vatsasura
+    correct: 2, // Ravana
   },
   {
     id: 12,
-    question: 'Which form of Lord Vishnu appeared as a beautiful woman to distribute nectar?',
+    question: 'In which form did Lord Vishnu appear as a beautiful woman to distribute the nectar?',
     options: [
       'Mohini',
       'Narasimha',
@@ -146,23 +151,23 @@ module.exports = [
   },
   {
     id: 13,
-    question: 'Who cursed King Parikshit to die in seven days?',
+    question: 'What did Hanuman bring back to Lord Rama to prove that he had found Sita?',
     options: [
-      'Durvasa',
-      'Shringi',
-      'Narada',
-      'Vyasa',
+      'Her ring',
+      'Her hair ornament',
+      'A letter from Sita',
+      'A branch from Ashoka grove',
     ],
-    correct: 1, // Shringi
+    correct: 1, // Her hair ornament
   },
   {
     id: 14,
-    question: 'Why did Prahlada continue to worship Lord Vishnu even though his father opposed it?',
+    question: 'Why did Prahlada keep worshipping Lord Vishnu even though his father forbade it?',
     options: [
       'He wanted to become a king',
       'He was a devoted follower of Lord Vishnu',
       'He wanted to defeat his father',
-      'He was taught to do so by the royal soldiers',
+      'The royal soldiers had taught him to',
     ],
     correct: 1, // He was a devoted follower of Lord Vishnu
   },
@@ -170,11 +175,11 @@ module.exports = [
     id: 15,
     question: 'How did Lord Krishna protect the unborn Parikshit from the Brahmastra?',
     options: [
-      'He entered the womb and protected him',
+      'He entered the womb and shielded him',
       'He sent Garuda to protect him',
-      'He created a protective shield around the palace',
+      'He created a shield around the palace',
       'He asked Arjuna to guard him',
     ],
-    correct: 0, // He entered the womb and protected him
+    correct: 0, // He entered the womb and shielded him
   },
 ];
