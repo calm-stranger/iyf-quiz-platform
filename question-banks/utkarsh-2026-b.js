@@ -52,7 +52,7 @@ module.exports = [
   },
   {
     id: 4,
-    question: 'Which demoness came to kill baby Krishna disguised as a nurse?',
+    question: 'Which demoness came to kill baby Krishna when he was a small child?',
     options: [
       'Putana',
       'Surpanakha',

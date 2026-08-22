@@ -97,14 +97,14 @@ module.exports = [
   },
   {
     id: 8,
-    question: 'Assertion: Kumbhakarna slept for six months at a stretch.\nReason: When he asked Brahma for a boon, Saraswati changed the words on his tongue.',
+    question: 'Assertion: The Bhagavad-gita was spoken after the Kurukshetra war had ended.\nReason: Sanjaya described the events of the war to King Dhritarashtra.',
     options: [
       'Both are true, and the reason explains the assertion',
       'Both are true, but the reason does not explain the assertion',
       'The assertion is true, but the reason is false',
       'The assertion is false, but the reason is true',
     ],
-    correct: 0, // Both are true, and the reason explains the assertion
+    correct: 3, // The Gita was spoken BEFORE the war; the reason is true
   },
   {
     id: 9,

@@ -85,14 +85,14 @@ module.exports = [
   },
   {
     id: 7,
-    question: 'To whom was the Srimad Bhagavatam narrated?',
+    question: 'How many days did King Parikshit have left to live when he heard the Srimad Bhagavatam?',
     options: [
-      'Parikshit',
-      'Arjuna',
-      'Yudhishthira',
-      'Dhritarashtra',
+      'Three days',
+      'Five days',
+      'Seven days',
+      'Ten days',
     ],
-    correct: 0, // Parikshit
+    correct: 2, // Seven days
   },
   {
     id: 8,

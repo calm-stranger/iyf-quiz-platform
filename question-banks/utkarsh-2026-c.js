@@ -141,14 +141,14 @@ module.exports = [
   },
   {
     id: 12,
-    question: 'Assertion: Hanuman was able to leap across the ocean to Lanka.\nReason: Jambavan reminded him of the strength he already had.',
+    question: 'Assertion: Lord Rama spent fourteen years in the forest.\nReason: Rama was the eldest son of King Dasaratha.',
     options: [
       'Both are true, and the reason explains the assertion',
       'Both are true, but the reason does not explain the assertion',
       'The assertion is true, but the reason is false',
       'The assertion is false, but the reason is true',
     ],
-    correct: 0, // Both are true, and the reason explains the assertion
+    correct: 1, // Both true, but being the eldest is not why he was exiled
   },
   {
     id: 13,
