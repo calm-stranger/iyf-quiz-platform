@@ -351,7 +351,9 @@ export default function Quiz() {
             <div className="text-xs font-medium text-[#71717A] uppercase tracking-widest mb-3">
               Question {currentQ + 1}
             </div>
-            <p className="text-[#18181B] text-[15px] sm:text-base font-medium leading-relaxed break-words">
+            {/* whitespace-pre-line so an assertion-and-reason question keeps the
+                two statements on separate lines instead of running together. */}
+            <p className="text-[#18181B] text-[15px] sm:text-base font-medium leading-relaxed break-words whitespace-pre-line">
               {currentQuestion.question}
             </p>
           </div>

@@ -96,7 +96,7 @@ module.exports = [
       'Devaki',
       'Aditi',
       'Kayadhu',
-      'Diti',
+      'Rohini',
     ],
     correct: 2, // Kayadhu
   },

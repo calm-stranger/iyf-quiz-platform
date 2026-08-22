@@ -10,6 +10,7 @@ const kv = require('../../lib/store');
 const fallbackQuestions = require('../../lib/questions');
 const db = require('../../lib/db');
 const { shuffleWithSeed } = require('../../lib/shuffle');
+const { getBank } = require('../../question-banks');
 
 // ── Config (override via environment variables) ────────────────────────────
 const FALLBACK_QUIZ_ID = 'local';
@@ -237,7 +238,7 @@ async function loadActiveQuiz(quizSlug) {
       duration_minutes: QUIZ_DURATION_MINUTES,
       max_students: MAX_STUDENTS,
     },
-    questions: fallbackQuestions,
+    questions: getBank(quizSlug) || fallbackQuestions,
   };
 }
 

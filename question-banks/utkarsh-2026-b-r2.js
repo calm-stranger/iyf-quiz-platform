@@ -61,9 +61,9 @@ module.exports = [
     question: 'Who was the mother of Kapila Muni?',
     options: [
       'Devahuti',
-      'Aditi',
+      'Kunti',
       'Sita',
-      'Kayadhu',
+      'Sumitra',
     ],
     correct: 0, // Devahuti
   },
@@ -74,7 +74,7 @@ module.exports = [
       'Narasimha',
       'Varaha',
       'Vamana',
-      'Kurma',
+      'Kalki',
     ],
     correct: 1, // Varaha
   },
@@ -84,19 +84,19 @@ module.exports = [
     options: [
       'Parikshit',
       'Arjuna',
+      'Bhima',
       'Yudhishthira',
-      'Dhritarashtra',
     ],
     correct: 0, // Parikshit
   },
   {
     id: 8,
-    question: 'Who narrated the Srimad Bhagavatam to King Parikshit?',
+    question: 'Which demon came to kill Krishna when he was just a small child?',
     options: [
-      'Vyasadeva',
-      'Narada Muni',
-      'Sukadeva Goswami',
-      'Sanjaya',
+      'Putana',
+      'Aghasura',
+      'Bakasura',
+      'Vatsasura',
     ],
     correct: 2, // Sukadeva Goswami
   },
@@ -107,20 +107,20 @@ module.exports = [
       'Prahlada',
       'Dhruva',
       'Parikshit',
-      'Bharata',
+      'Abhimanyu',
     ],
     correct: 1, // Dhruva
   },
   {
     id: 10,
-    question: 'What did Lord Vamana ask King Bali for?',
+    question: 'Krishna spent most of his childhood in which place?',
     options: [
-      'Three steps of land',
-      'Three villages',
-      'Three treasures',
-      'Three wishes',
+      'Mathura',
+      'Vrindavana',
+      'Gokula',
+      'Kurukshetra',
     ],
-    correct: 0, // Three steps of land
+    correct: 2, // Gokula
   },
   {
     id: 11,

@@ -52,7 +52,7 @@ module.exports = [
       'Monkeys',
       'Elephants',
       'Horses',
-      'Soldiers',
+      'Humans',
     ],
     correct: 0, // Monkeys
   },
@@ -71,7 +71,7 @@ module.exports = [
     id: 6,
     question: 'What did Krishna lift to protect the people of Vrindavan?',
     options: [
-      'A mountain',
+      'A mountain (Govardhan Hill)',
       'A tree',
       'A palace',
       'A river',
@@ -168,7 +168,7 @@ module.exports = [
   },
   {
     id: 15,
-    question: 'Who was the mother who raised Krishna in Gokul?',
+    question: 'Who was the mother who raised Krishna?',
     options: [
       'Devaki',
       'Yashoda',
