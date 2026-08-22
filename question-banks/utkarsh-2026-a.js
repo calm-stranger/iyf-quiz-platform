@@ -1,180 +1,186 @@
 /**
  * Utkarsh 2026 — Vedic Quiz — Group A (Class 1-4) — Round 1
  *
- * 15 questions, transcribed from the printed paper.
+ * The simplest paper of the three, and deliberately so: Group A spans ages
+ * six to ten, and for the youngest, reading the question is most of the
+ * work. Short words, short sentences, one idea per question.
+ *
+ * Every question is Rama-leela or Krishna-leela — the stories a small child
+ * has actually heard at home and at festivals. No Mahabharata: a six-year-old
+ * has not formed a view on which Pandava was the strongest, and asking makes
+ * the paper feel closed to them rather than difficult in a useful way.
+ *
+ * Wrong answers are plainly wrong. Nothing here turns on telling apart two
+ * brothers, two wives or two demons.
  *
  * `correct` is the 0-based index into `options` AS LISTED HERE. The platform
- * shuffles the options per student and maps the answer across, so the order
- * below is only the reference order — do not renumber it by hand.
- *
- * The source PDF carried no answer key, so these were filled in separately.
- * Check them before the event: a wrong index marks every student wrong.
+ * shuffles options per student and maps the answer across.
  */
 
 module.exports = [
   {
     id: 1,
-    question: 'Who was Lord Rama?',
+    question: 'What colour is Lord Krishna shown in pictures?',
     options: [
-      'The King of Ayodhya',
-      'The King of Lanka',
-      'A monkey',
-      'A demon',
+      'Blue',
+      'Green',
+      'Red',
+      'Yellow',
     ],
-    correct: 0, // The King of Ayodhya
+    correct: 0, // Blue
   },
   {
     id: 2,
-    question: 'Who was the wife of Lord Rama?',
+    question: 'Which instrument does Lord Krishna play?',
+    options: [
+      'Drum',
+      'Flute',
+      'Guitar',
+      'Bell',
+    ],
+    correct: 1, // Flute
+  },
+  {
+    id: 3,
+    question: 'What does Lord Krishna wear on His head?',
+    options: [
+      'A peacock feather',
+      'A gold crown',
+      'A cap',
+      'A flower',
+    ],
+    correct: 0, // A peacock feather
+  },
+  {
+    id: 4,
+    question: 'Which animals did Krishna look after in Vrindavan?',
+    options: [
+      'Horses',
+      'Elephants',
+      'Cows',
+      'Camels',
+    ],
+    correct: 2, // Cows
+  },
+  {
+    id: 5,
+    question: 'What food did baby Krishna love to steal?',
+    options: [
+      'Butter',
+      'Rice',
+      'Fruit',
+      'Bread',
+    ],
+    correct: 0, // Butter
+  },
+  {
+    id: 6,
+    question: 'Who was Krishna\'s mother in Gokul?',
     options: [
       'Sita',
       'Radha',
       'Kunti',
+      'Yashoda',
+    ],
+    correct: 3, // Yashoda
+  },
+  {
+    id: 7,
+    question: 'Who is the wife of Lord Rama?',
+    options: [
+      'Sita',
+      'Radha',
+      'Yashoda',
       'Draupadi',
     ],
     correct: 0, // Sita
   },
   {
-    id: 3,
-    question: 'How many Pandavas were there?',
-    options: [
-      '4',
-      '5',
-      '6',
-      '7',
-    ],
-    correct: 1, // 5
-  },
-  {
-    id: 4,
-    question: 'Who was Arjuna\'s friend and charioteer during the Kurukshetra war?',
-    options: [
-      'Bhima',
-      'Duryodhana',
-      'Krishna',
-      'Karna',
-    ],
-    correct: 2, // Krishna
-  },
-  {
-    id: 5,
-    question: 'Where did Lord Rama go during his exile?',
-    options: [
-      'Palace',
-      'Forest',
-      'Mountain kingdom',
-      'Sea',
-    ],
-    correct: 1, // Forest
-  },
-  {
-    id: 6,
-    question: 'Who wrote the Ramayana?',
-    options: [
-      'Ved Vyasa',
-      'Valmiki',
-      'Kalidasa',
-      'Tulsidas',
-    ],
-    correct: 1, // Valmiki
-  },
-  {
-    id: 7,
-    question: 'Who was the demon king of Lanka?',
-    options: [
-      'Kamsa',
-      'Ravana',
-      'Duryodhana',
-      'Shakuni',
-    ],
-    correct: 1, // Ravana
-  },
-  {
     id: 8,
-    question: 'What instrument is Lord Krishna famous for playing?',
+    question: 'Who is Krishna\'s dearest friend in Vrindavan?',
     options: [
-      'Flute',
-      'Guitar',
-      'Tabla',
-      'Violin',
+      'Radha',
+      'Sita',
+      'Kunti',
+      'Draupadi',
     ],
-    correct: 0, // Flute
+    correct: 0, // Radha
   },
   {
     id: 9,
-    question: 'Who carried baby Krishna across the river Yamuna on the night He was born?',
+    question: 'How many heads did Ravana have?',
     options: [
-      'Vasudeva',
-      'Nanda',
-      'Balarama',
-      'Akrura',
+      'Two',
+      'Five',
+      'Ten',
+      'Twenty',
     ],
-    correct: 0, // Vasudeva
+    correct: 2, // Ten
   },
   {
     id: 10,
-    question: 'Who was the father of Lord Rama?',
+    question: 'Ravana was the king of which land?',
     options: [
-      'Janaka',
-      'Dasaratha',
-      'Vibhishana',
-      'Sugriva',
+      'Lanka',
+      'Ayodhya',
+      'Mathura',
+      'Gokul',
     ],
-    correct: 1, // Dasaratha
+    correct: 0, // Lanka
   },
   {
     id: 11,
-    question: 'For how many years did Lord Rama spend in the forest?',
+    question: 'What weapon does Lord Rama carry?',
     options: [
-      '10 years',
-      '12 years',
-      '14 years',
-      '16 years',
+      'A sword',
+      'A mace',
+      'A spear',
+      'A bow and arrow',
     ],
-    correct: 2, // 14 years
+    correct: 3, // A bow and arrow
   },
   {
     id: 12,
-    question: 'Who was the teacher of the Pandavas and the Kauravas?',
+    question: 'Which brother went with Lord Rama to the forest?',
     options: [
-      'Dronacharya',
-      'Krishna',
-      'Valmiki',
-      'Vyasadeva',
+      'Lakshmana',
+      'Bharata',
+      'Shatrughna',
+      'Hanuman',
     ],
-    correct: 0, // Dronacharya — Bhishma removed as a distractor
+    correct: 0, // Lakshmana
   },
   {
     id: 13,
-    question: 'Who helped Lord Rama find Sita?',
+    question: 'Who helped Lord Rama build a bridge across the sea?',
     options: [
-      'Hanuman',
-      'Kamsa',
-      'Duryodhana',
-      'Shakuni',
+      'Elephants',
+      'Monkeys',
+      'Birds',
+      'Fish',
     ],
-    correct: 0, // Hanuman
+    correct: 1, // Monkeys
   },
   {
     id: 14,
-    question: 'Which bird tried to stop Ravana from taking Sita away?',
+    question: 'Which festival celebrates Lord Rama coming home to Ayodhya?',
     options: [
-      'Jatayu',
-      'Garuda',
-      'Sugriva',
-      'Angada',
+      'Holi',
+      'Janmashtami',
+      'Diwali',
+      'Raksha Bandhan',
     ],
-    correct: 0, // Jatayu
+    correct: 2, // Diwali
   },
   {
     id: 15,
-    question: 'Who was the king of the monkeys who became Lord Rama\'s friend?',
+    question: 'What did Krishna lift to save the people of Vrindavan?',
     options: [
-      'Sugriva',
-      'Jambavan',
-      'Angada',
-      'Vibhishana',
+      'A hill',
+      'A tree',
+      'A house',
+      'A boat',
     ],
-    correct: 0, // Sugriva — Vali removed as a distractor
+    correct: 0, // A hill
   },
 ];

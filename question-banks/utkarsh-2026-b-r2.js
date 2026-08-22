@@ -30,14 +30,14 @@ module.exports = [
   },
   {
     id: 2,
-    question: 'Who set Lanka on fire with his burning tail?',
+    question: 'Which hill did Lord Krishna lift on His finger?',
     options: [
-      'Angada',
-      'Hanuman',
-      'Jambavan',
-      'Sugriva',
+      'Govardhan',
+      'Kailash',
+      'Meru',
+      'Himalaya',
     ],
-    correct: 1, // Hanuman
+    correct: 0, // Hanuman was named by two later questions, giving this away
   },
   {
     id: 3,
@@ -133,10 +133,10 @@ module.exports = [
     options: [
       'Putana',
       'Bakasura',
-      'Ravana',
+      'Kumbhakarna',
       'Aghasura',
     ],
-    correct: 2, // Ravana
+    correct: 2, // Ravana replaced: Q1 named him, handing this one over
   },
   {
     id: 12,

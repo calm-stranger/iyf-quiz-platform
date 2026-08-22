@@ -63,14 +63,14 @@ module.exports = [
   },
   {
     id: 5,
-    question: 'Why did Kamsa try to kill baby Krishna?',
+    question: 'Why did the king of Mathura try to kill baby Krishna?',
     options: [
       'Krishna had stolen butter from his palace',
       'A prophecy said the eighth son of Devaki would kill him',
       'He wanted Vasudeva\'s kingdom',
       'The people of Mathura had asked him to',
     ],
-    correct: 1, // A prophecy said the eighth son of Devaki would kill him
+    correct: 1, // 'Kamsa' dropped from the wording, it answered Q8
   },
   {
     id: 6,
@@ -173,13 +173,13 @@ module.exports = [
   },
   {
     id: 15,
-    question: 'Which demon did Lord Krishna subdue by dancing on its hoods in the Yamuna?',
+    question: 'Which serpent did Lord Krishna subdue by dancing on its hoods?',
     options: [
       'Aghasura',
       'Kaliya',
       'Bakasura',
       'Dhenukasura',
     ],
-    correct: 1, // Kaliya
+    correct: 1, // Kaliya — 'Yamuna' dropped, it answered Q6
   },
 ];

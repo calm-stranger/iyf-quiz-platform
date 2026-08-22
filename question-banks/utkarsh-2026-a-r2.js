@@ -1,180 +1,187 @@
 /**
  * Utkarsh 2026 — Vedic Quiz — Group A (Class 1-4) — Round 2
  *
- * 15 questions, transcribed from the printed paper.
+ * The simplest paper of the three, and deliberately so: Group A spans ages
+ * six to ten, and for the youngest, reading the question is most of the
+ * work. Short words, short sentences, one idea per question.
+ *
+ * Every question is Rama-leela or Krishna-leela — the stories a small child
+ * has actually heard at home and at festivals. No Mahabharata: a six-year-old
+ * has not formed a view on which Pandava was the strongest, and asking makes
+ * the paper feel closed to them rather than difficult in a useful way.
+ *
+ * Wrong answers are plainly wrong. Nothing here turns on telling apart two
+ * brothers, two wives or two demons.
  *
  * `correct` is the 0-based index into `options` AS LISTED HERE. The platform
- * shuffles the options per student and maps the answer across, so the order
- * below is only the reference order — do not renumber it by hand.
- *
- * The source PDF carried no answer key, so these were filled in separately.
- * Check them before the event: a wrong index marks every student wrong.
+ * shuffles options per student and maps the answer across.
  */
 
 module.exports = [
   {
     id: 1,
-    question: 'Who was the mother of Lord Rama?',
+    question: 'In which city was Lord Krishna born?',
     options: [
-      'Kausalya',
-      'Sita',
-      'Radha',
-      'Kunti',
+      'Ayodhya',
+      'Mathura',
+      'Lanka',
+      'Gokul',
     ],
-    correct: 0, // Kausalya — the co-wives removed as distractors
+    correct: 1, // Mathura
   },
   {
     id: 2,
-    question: 'Who was Lord Rama\'s brother who went with him to the forest?',
+    question: 'Who is Lord Krishna\'s elder brother?',
     options: [
-      'Bharata',
+      'Balarama',
+      'Arjuna',
       'Lakshmana',
-      'Shatrughna',
       'Hanuman',
     ],
-    correct: 1, // Lakshmana
+    correct: 0, // Balarama
   },
   {
     id: 3,
-    question: 'Who was Sita\'s father?',
+    question: 'Who set Lanka on fire with his tail?',
     options: [
-      'Dasaratha',
-      'Janaka',
-      'Ravana',
+      'Rama',
+      'Lakshmana',
+      'Hanuman',
       'Sugriva',
     ],
-    correct: 1, // Janaka
+    correct: 2, // Hanuman
   },
   {
     id: 4,
-    question: 'Who helped Lord Rama build the bridge to Lanka?',
+    question: 'What was brought from the mountain to save Lakshmana?',
     options: [
-      'Monkeys',
-      'Elephants',
-      'Horses',
-      'Humans',
+      'A healing herb',
+      'Gold',
+      'Water',
+      'Fruit',
     ],
-    correct: 0, // Monkeys
+    correct: 0, // A healing herb — no longer names Hanuman, whose name was
+                // the answer to Q3
   },
   {
     id: 5,
-    question: 'Who was Krishna\'s elder brother?',
+    question: 'Who took Sita away to Lanka?',
     options: [
-      'Arjuna',
-      'Balarama',
-      'Sudama',
-      'Nakula',
+      'Ravana',
+      'Sugriva',
+      'Vibhishana',
+      'Jatayu',
     ],
-    correct: 1, // Balarama
+    correct: 0, // Ravana
   },
   {
     id: 6,
-    question: 'What did Krishna lift to protect the people of Vrindavan?',
+    question: 'How many years did Lord Rama stay in the forest?',
     options: [
-      'A mountain (Govardhan Hill)',
-      'A tree',
-      'A palace',
-      'A river',
+      'Two',
+      'Five',
+      'Fourteen',
+      'Twenty',
     ],
-    correct: 0, // A mountain
+    correct: 2, // Fourteen
   },
   {
     id: 7,
-    question: 'Who was the eldest of the five Pandavas?',
-    options: [
-      'Arjuna',
-      'Bhima',
-      'Yudhishthira',
-      'Nakula',
-    ],
-    correct: 2, // Yudhishthira
-  },
-  {
-    id: 8,
-    question: 'Who was known for his great strength among the Pandavas?',
-    options: [
-      'Arjuna',
-      'Bhima',
-      'Sahadeva',
-      'Yudhishthira',
-    ],
-    correct: 1, // Bhima
-  },
-  {
-    id: 9,
-    question: 'Which river flows through Vrindavan?',
+    question: 'Which river flows beside Vrindavan?',
     options: [
       'Ganga',
       'Yamuna',
       'Kaveri',
-      'Narmada',
+      'Godavari',
     ],
     correct: 1, // Yamuna
   },
   {
-    id: 10,
-    question: 'Who became the king of Lanka after Ravana was defeated?',
+    id: 8,
+    question: 'What did Lord Rama break at Sita\'s swayamvara?',
     options: [
-      'Vibhishana',
-      'Hanuman',
-      'Sugriva',
-      'Angada',
+      'A great bow',
+      'A pot',
+      'A sword',
+      'A chariot',
     ],
-    correct: 0, // Vibhishana — Ravana's brother and son removed
+    correct: 0, // A great bow
+  },
+  {
+    id: 9,
+    question: 'What did the gopis do when Krishna played His flute?',
+    options: [
+      'They ran away',
+      'They fell asleep',
+      'They came to listen',
+      'They began to cry',
+    ],
+    correct: 2, // They came to listen
+  },
+  {
+    id: 10,
+    question: 'Which demoness came to feed baby Krishna poison?',
+    options: [
+      'Putana',
+      'Surpanakha',
+      'Tataka',
+      'Holika',
+    ],
+    correct: 0, // Putana
   },
   {
     id: 11,
-    question: 'Why did Krishna lift Govardhan Hill?',
+    question: 'What did Krishna do to the serpent Kaliya in the river?',
     options: [
-      'To protect the people from heavy rain',
-      'To build a palace',
-      'To cross a river',
-      'To fight Ravana',
+      'He ran away from him',
+      'He danced on his heads',
+      'He became his friend',
+      'He hid under water',
     ],
-    correct: 0, // To protect the people from heavy rain
+    correct: 1, // He danced on his heads
   },
   {
     id: 12,
-    question: 'Who was the youngest among the five Pandavas?',
+    question: 'Who was Lord Rama\'s father?',
     options: [
-      'Yudhishthira',
-      'Bhima',
-      'Arjuna',
-      'Sahadeva',
+      'Janaka',
+      'Nanda',
+      'Dasaratha',
+      'Vasudeva',
     ],
-    correct: 3, // Sahadeva — his twin Nakula removed as a distractor
+    correct: 2, // Dasaratha
   },
   {
     id: 13,
-    question: 'Who advised Arjuna to fight for what was right on the battlefield?',
+    question: 'Which brother looked after Ayodhya while Rama was away?',
     options: [
-      'Krishna',
-      'Yudhishthira',
-      'Bhishma',
-      'Dronacharya',
+      'Bharata',
+      'Lakshmana',
+      'Shatrughna',
+      'Sugriva',
     ],
-    correct: 0, // Krishna
+    correct: 0, // Bharata
   },
   {
     id: 14,
-    question: 'How many brothers did Lord Rama have?',
+    question: 'What is the story of Lord Rama called?',
     options: [
-      'Two',
-      'Three',
-      'Four',
-      'Five',
+      'The Mahabharata',
+      'The Ramayana',
+      'The Gita',
+      'The Puranas',
     ],
-    correct: 1, // Three — Lakshmana, Bharata and Shatrughna
+    correct: 1, // The Ramayana
   },
   {
     id: 15,
-    question: 'Who was the mother who raised Krishna?',
+    question: 'Which festival celebrates the birth of Lord Krishna?',
     options: [
-      'Devaki',
-      'Yashoda',
-      'Rohini',
-      'Kunti',
+      'Diwali',
+      'Holi',
+      'Janmashtami',
+      'Navaratri',
     ],
-    correct: 1, // Yashoda — Devaki gave birth to Him, Yashoda raised Him
+    correct: 2, // Janmashtami
   },
 ];

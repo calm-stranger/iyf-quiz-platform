@@ -124,9 +124,9 @@ module.exports = [
       'Hanuman',
       'Angada',
       'Jambavan',
-      'Vibhishana',
+      'Lakshmana',
     ],
-    correct: 3, // Vibhishana
+    correct: 3, // Vibhishana replaced: Q4 is about him joining Rama
   },
   {
     id: 11,
