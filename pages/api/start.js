@@ -9,7 +9,7 @@
 const kv = require('../../lib/store');
 const fallbackQuestions = require('../../lib/questions');
 const db = require('../../lib/db');
-const { shuffleWithSeed } = require('../../lib/shuffle');
+const { shuffleWithSeed, optionIndexList } = require('../../lib/shuffle');
 const { getBank } = require('../../question-banks');
 
 // ── Config (override via environment variables) ────────────────────────────
@@ -150,7 +150,10 @@ export default async function handler(req, res) {
     // answer ended up so we can grade server-side.
     const sessionQuestions = shuffledQIndices.map((qIdx) => {
       const q = questions[qIdx];
-      const optionIndices = [0, 1, 2, 3];
+      /* Index list comes from the question, not a fixed [0,1,2,3]. A true/false
+         question has two options, and assuming four appended two undefined
+         entries that rendered as empty, tappable, always-wrong boxes. */
+      const optionIndices = optionIndexList(q.options);
       // Different option shuffle per question
       const shuffledOptionOrder = shuffleWithSeed(optionIndices, `${studentKey}-opts-${qIdx}`);
       const correctAnswerIndex = shuffledOptionOrder.indexOf(q.correct);

@@ -379,7 +379,7 @@ export default function Quiz() {
                         : 'border-[#D4D4D8] text-[#71717A]'
                     }`}
                   >
-                    {['A', 'B', 'C', 'D'][i]}
+                    {String.fromCharCode(65 + i)}
                   </span>
                   <span className="text-sm sm:text-[15px] font-medium leading-relaxed min-w-0 break-words">{option}</span>
                   {isSelected && (
