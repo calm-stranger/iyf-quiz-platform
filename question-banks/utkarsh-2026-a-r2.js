@@ -168,13 +168,13 @@ module.exports = [
   },
   {
     id: 15,
-    question: 'Who crossed the ocean to reach Lanka in search of Sita?',
+    question: 'Who was the mother who raised Krishna in Gokul?',
     options: [
-      'Sugriva',
-      'Jambavan',
-      'Hanuman',
-      'Nala',
+      'Devaki',
+      'Yashoda',
+      'Rohini',
+      'Kunti',
     ],
-    correct: 2, // Hanuman
+    correct: 1, // Yashoda — Devaki gave birth to Him, Yashoda raised Him
   },
 ];
