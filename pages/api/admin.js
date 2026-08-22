@@ -11,7 +11,7 @@
 const kv = require('../../lib/store');
 const fallbackQuestions = require('../../lib/questions');
 const db = require('../../lib/db');
-const { EVENT, GROUPS } = require('../../lib/utkarsh');
+const { EVENT, allRounds } = require('../../lib/utkarsh');
 const { listBanks, getBank } = require('../../question-banks');
 const { getWrongAnswers } = db;
 
@@ -69,22 +69,24 @@ export default async function handler(req, res) {
         const created = [];
         const skipped = [];
 
-        for (const group of GROUPS) {
-          const existing = await db.getQuizBySlug(group.slug);
+        // Three groups x two rounds. Round 2 is created as a draft alongside
+        // round 1 and published later, so it cannot be entered early.
+        for (const round of allRounds()) {
+          const existing = await db.getQuizBySlug(round.slug);
           if (existing) {
-            skipped.push(group.slug);
+            skipped.push(round.slug);
             continue;
           }
           const quiz = await db.createQuiz({
-            title: group.title,
+            title: round.title,
             durationMinutes,
             maxStudents,
             event: EVENT,
-            groupCode: group.code,
-            slug: group.slug,
-            stage: 1,
+            groupCode: round.groupCode,
+            slug: round.slug,
+            stage: round.stage,
           });
-          created.push(quiz?.slug || group.slug);
+          created.push(quiz?.slug || round.slug);
         }
         return res.status(200).json({ created, skipped });
       }

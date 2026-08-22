@@ -9,16 +9,28 @@
 
 const banks = {
   'utkarsh-2026-a': {
-    label: 'Utkarsh 2026 — Group A (Class 1–4)',
+    label: 'Utkarsh 2026 — Group A — Round 1',
     questions: require('./utkarsh-2026-a'),
   },
+  'utkarsh-2026-a-r2': {
+    label: 'Utkarsh 2026 — Group A — Round 2',
+    questions: require('./utkarsh-2026-a-r2'),
+  },
   'utkarsh-2026-b': {
-    label: 'Utkarsh 2026 — Group B (Class 5–7)',
+    label: 'Utkarsh 2026 — Group B — Round 1',
     questions: require('./utkarsh-2026-b'),
   },
+  'utkarsh-2026-b-r2': {
+    label: 'Utkarsh 2026 — Group B — Round 2',
+    questions: require('./utkarsh-2026-b-r2'),
+  },
   'utkarsh-2026-c': {
-    label: 'Utkarsh 2026 — Group C (Class 8–10)',
+    label: 'Utkarsh 2026 — Group C — Round 1',
     questions: require('./utkarsh-2026-c'),
+  },
+  'utkarsh-2026-c-r2': {
+    label: 'Utkarsh 2026 — Group C — Round 2',
+    questions: require('./utkarsh-2026-c-r2'),
   },
   'legacy-questions-js': {
     label: 'lib/questions.js (the original bank)',

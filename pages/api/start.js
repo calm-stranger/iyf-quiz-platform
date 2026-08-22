@@ -224,7 +224,15 @@ async function loadActiveQuiz(quizSlug) {
 
   return {
     quiz: {
-      id: FALLBACK_QUIZ_ID,
+      /*
+        Keyed by slug, not a single constant. Every KV key is namespaced by
+        quiz id — session, result, student_count — so without this each round
+        shares one namespace and round 2 is refused as "already submitted".
+        With Supabase the rounds are separate rows with separate ids and this
+        never arises; the point is that a local run behaves the same way, since
+        a local run is how anyone would check the flow before the event.
+      */
+      id: quizSlug || FALLBACK_QUIZ_ID,
       title: FALLBACK_QUIZ_TITLE,
       duration_minutes: QUIZ_DURATION_MINUTES,
       max_students: MAX_STUDENTS,

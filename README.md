@@ -209,13 +209,31 @@ From there students join the existing `/instructions` → `/quiz` → `/done` fl
 unchanged; the group's quiz slug travels with them so they always enter their
 own group's quiz rather than whichever happens to be active.
 
+### Two rounds
+
+Each group sits **two rounds of 15 questions**. They are separate quizzes
+sharing a group, told apart by `stage`, so round 2 can stay closed until
+round 1 is finished.
+
+When a student submits round 1, the confirmation page offers **Start Round 2**
+and begins it in place — no re-entering their name. If round 2 is not published
+yet the page says so and asks them to wait and refresh.
+
+Slugs are `utkarsh-2026-a` for round 1 and `utkarsh-2026-a-r2` for round 2.
+Round 1 keeps the bare slug so a quiz created before rounds existed still works.
+
 ### On the day
 
-1. `/admin` → **Set up the three group quizzes**. Creates them as drafts, and
-   skips any that already exist, so it is safe to press twice.
-2. Select each quiz → choose its bank → **Import questions**.
-3. **Publish** all three. Publishing one no longer closes the others.
-4. Afterwards, **Close** each and export its CSV separately.
+1. `/admin` → **Set up the three group quizzes**. Creates all **six** (three
+   groups × two rounds) as drafts, skipping any that already exist, so it is
+   safe to press twice.
+2. Select each quiz → choose its bank → **Import questions**. There is one bank
+   per round: `utkarsh-2026-a`, `utkarsh-2026-a-r2`, and so on.
+3. **Publish the three round 1 quizzes.** Leave round 2 as drafts.
+4. When the room has finished round 1, **publish the three round 2 quizzes**.
+   Students already on the confirmation page only need to refresh.
+5. Afterwards, **Close** each and export its CSV separately — six exports, one
+   per group per round.
 
 ### Why a quiz now has a "lane"
 

@@ -106,7 +106,15 @@ export default function UtkarshGroup({ group }) {
             </div>
           ) : (
             <>
-              <p className="mt-7 text-sm text-[#71717A]">Enter your details to begin</p>
+              <p className="mt-7 text-sm text-[#71717A]">
+                Enter your details to begin {group.rounds?.length > 1 ? `Round 1 of ${group.rounds.length}` : ''}
+              </p>
+              {group.rounds?.length > 1 ? (
+                <p className="mt-1 text-xs leading-relaxed text-[#A1A1AA]">
+                  There are {group.rounds.length} rounds. When you submit Round 1 you can start the
+                  next one straight away — you will not have to enter your details again.
+                </p>
+              ) : null}
 
               <form onSubmit={handleContinue} className="mt-4">
                 <label className="mb-2 block text-sm font-medium text-[#3F3F46]">Full name</label>
