@@ -2,3 +2,5 @@
 .env
 .env.example
 node_modules
+# Generated QR sheets — rebuild with scripts/build-qr.py <url>
+utkarsh-quiz-qr-*.pdf
