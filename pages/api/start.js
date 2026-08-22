@@ -86,9 +86,11 @@ export default async function handler(req, res) {
 
   try {
     const active = await loadActiveQuiz(quizSlug);
-    if (!active.questions.length) {
+    if (!active || !active.questions.length) {
       return res.status(409).json({
-        error: 'No active quiz is available. Ask the admin to publish a quiz first.',
+        error: quizSlug
+          ? 'This quiz is not open yet. It has either not been published, or has no questions imported. Please tell the organisers.'
+          : 'No active quiz is available. Ask the admin to publish a quiz first.',
       });
     }
 
@@ -222,6 +224,16 @@ async function loadActiveQuiz(quizSlug) {
   // Without one, this is the single global active quiz, as before.
   const active = await db.getActiveQuizWithQuestions(quizSlug ? { slug: quizSlug } : {});
   if (active) return active;
+
+  /*
+    With a database configured, no active quiz is a REAL condition — the quiz
+    is still a draft, or its questions were never imported. Falling through to
+    the local bank here put a completely different 25-question paper in front
+    of students, which looks like the quiz working and is far worse than an
+    error. The fallback below is for local development only, where there is no
+    database at all.
+  */
+  if (db.enabled) return null;
 
   return {
     quiz: {
