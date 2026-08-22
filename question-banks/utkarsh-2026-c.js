@@ -154,10 +154,10 @@ module.exports = [
     id: 13,
     question: 'Why did Yashoda tie Krishna with a rope?',
     options: [
-      'He broke a pot and was mischievous',
+      'He broke a butter pot and was mischievous',
       'He was running out into the street and she was afraid he would get lost',
       'He was fighting with the other cowherd boys',
-      'He had broken her cooking pots',
+      'He wanted to go to the forest',
     ],
     correct: 0,
   },

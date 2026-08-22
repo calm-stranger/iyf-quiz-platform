@@ -20,12 +20,12 @@
 module.exports = [
   {
     id: 1,
-    question: 'Who helped Lord Rama to find Sita?',
+    question: 'Who helped Lord Rama to find Sita in Lanka?',
     options: [
       'Hanuman',
-      'Lakshmana',
-      'Sugriva',
-      'Angada',
+      'Bharata',
+      'Vibhishana',
+      'Kumbhkarna',
     ],
     correct: 0, // Hanuman
   },
