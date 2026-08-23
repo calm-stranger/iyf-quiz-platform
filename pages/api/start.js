@@ -117,6 +117,10 @@ export default async function handler(req, res) {
       });
     }
 
+    // An attempt an admin has reset is a clean slate; anything else that is
+    // still lying around is a session to pick back up.
+    const resumable = !!existingAttempt && existingAttempt.status !== 'reset';
+
     // ── Resume existing session? ───────────────────────────────────────────
     const existingSession = await kv.get(`session:${quizId}:${studentKey}`);
     if (existingSession) {
@@ -175,9 +179,17 @@ export default async function handler(req, res) {
       studentEmail,
       studentDob,
       studentKey,
-      startTime: existingAttempt ? new Date(existingAttempt.started_at).getTime() : Date.now(),
+      /*
+        A reset attempt starts over; only a genuinely interrupted one resumes.
+
+        Without this, a student reset after an auto-submit inherited the
+        original started_at — so their timer resumed mid-way through, or had
+        already expired — and inherited the violation count that ejected them
+        in the first place. Both made the retake unusable.
+      */
+      startTime: resumable ? new Date(existingAttempt.started_at).getTime() : Date.now(),
       sessionQuestions,         // full data for grading
-      violations: existingAttempt ? (existingAttempt.violations || 0) : 0,
+      violations: resumable ? (existingAttempt.violations || 0) : 0,
       submitted: false,
     };
 
