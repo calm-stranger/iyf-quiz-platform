@@ -50,6 +50,7 @@ export default function Instructions() {
   const rules = buildRules(durationMins);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [nextRound, setNextRound] = useState(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -90,6 +91,7 @@ export default function Instructions() {
     if (!agreed || loading) return;
     setLoading(true);
     setError('');
+    setNextRound(null);
 
     try {
       const res = await fetch('/api/start', {
@@ -110,6 +112,9 @@ export default function Instructions() {
 
       if (!res.ok) {
         setError(data.error || 'Could not start the quiz. Please try again.');
+        // The round they asked for is done, but a later one is open and still
+        // theirs to sit — offer it instead of leaving them at a dead end.
+        setNextRound(data.nextRound || null);
         setLoading(false);
         return;
       }
@@ -197,7 +202,31 @@ export default function Instructions() {
             </span>
           </label>
 
-          {error && (
+          {nextRound && (
+            <div className="mb-4 rounded-xl border border-[#18181B] bg-white p-4">
+              <p className="text-sm font-semibold text-[#18181B]">
+                You have already finished that round.
+              </p>
+              <p className="mt-1 text-sm text-[#52525B]">
+                {nextRound.label} is open and you have not sat it yet. Your answers from
+                the round you finished are safely saved.
+              </p>
+              <button
+                type="button"
+                onClick={() => {
+                  sessionStorage.setItem('quizSlug', nextRound.slug);
+                  setQuizSlug(nextRound.slug);
+                  setError('');
+                  setNextRound(null);
+                }}
+                className="mt-3 w-full rounded-xl bg-[#18181B] py-3 text-sm font-medium text-white hover:bg-[#27272A]"
+              >
+                Continue to {nextRound.label} →
+              </button>
+            </div>
+          )}
+
+          {error && !nextRound && (
             <div className="bg-red-50 border border-red-200 rounded-xl px-4 py-3 mb-4 text-sm text-red-700">
               {error}
             </div>

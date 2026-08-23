@@ -10,6 +10,7 @@ const kv = require('../../lib/store');
 const fallbackQuestions = require('../../lib/questions');
 const db = require('../../lib/db');
 const { shuffleWithSeed, optionIndexList } = require('../../lib/shuffle');
+const { nextRound } = require('../../lib/utkarsh');
 const { getBank } = require('../../question-banks');
 
 // ── Config (override via environment variables) ────────────────────────────
@@ -104,17 +105,13 @@ export default async function handler(req, res) {
     if (db.enabled) {
       existingAttempt = await db.findAttempt(quizId, studentKey);
       if (existingAttempt?.status === 'submitted') {
-        return res.status(409).json({
-          error: 'You have already submitted this quiz. Contact your teacher if this is a mistake.',
-        });
+        return res.status(409).json(await alreadyDone(quiz, studentKey));
       }
     }
 
     const existingResult = await kv.get(`result:${quizId}:${studentKey}`);
     if (existingResult) {
-      return res.status(409).json({
-        error: 'You have already submitted this quiz. Contact your teacher if this is a mistake.',
-      });
+      return res.status(409).json(await alreadyDone(quiz, studentKey));
     }
 
     // An attempt an admin has reset is a clean slate; anything else that is
@@ -267,6 +264,48 @@ async function loadActiveQuiz(quizSlug) {
     },
     questions: getBank(quizSlug) || fallbackQuestions,
   };
+}
+
+
+/**
+ * What to tell a student whose requested round is already submitted.
+ *
+ * The group entry page always starts round 1, so anyone who finished round 1
+ * and then lost the hand-off screen — closed the tab, or was auto-submitted
+ * when their screen went dark — came back to a flat "already submitted" and
+ * had no route to round 2 at all. If a later round is open and they have not
+ * sat it, offer it rather than turning them away.
+ */
+async function alreadyDone(quiz, studentKey) {
+  const base = {
+    error: 'You have already submitted this quiz. Contact your teacher if this is a mistake.',
+  };
+  try {
+    let slug = quiz.slug;
+    // Walk forward: round 2, then any round after it, in case more are added.
+    for (let hop = 0; hop < 4; hop++) {
+      const next = nextRound(slug);
+      if (!next) return base;
+      slug = next.slug;
+
+      const later = await db.getQuizBySlug(slug);
+      if (!later || later.status !== 'active') continue;
+
+      if (db.enabled) {
+        const attempt = await db.findAttempt(later.id, studentKey);
+        if (attempt?.status === 'submitted') continue;
+      }
+      if (await kv.get(`result:${later.id}:${studentKey}`)) continue;
+
+      return {
+        error: `You have already submitted ${quiz.title?.includes('Round 1') ? 'Round 1' : 'this round'}.`,
+        nextRound: { slug, label: next.label || 'the next round' },
+      };
+    }
+  } catch (err) {
+    console.error('[alreadyDone]', err);
+  }
+  return base;
 }
 
 function buildClientQuestions(questions, sessionQuestions) {
