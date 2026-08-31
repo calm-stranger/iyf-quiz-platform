@@ -1,31 +1,6 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
-
-// Quiz unlock time — 9:00 PM IST on 31 Aug 2026.
-// IST = UTC+05:30, so 21:00 IST = 15:30 UTC.
-const QUIZ_UNLOCK_TIME = new Date('2026-08-31T15:30:00Z');
-
-function useCountdown(unlockTime) {
-  const [remaining, setRemaining] = useState(() => Math.max(0, unlockTime - Date.now()));
-  const timerRef = useRef(null);
-
-  useEffect(() => {
-    if (remaining <= 0) return;
-    timerRef.current = setInterval(() => {
-      const left = Math.max(0, unlockTime - Date.now());
-      setRemaining(left);
-      if (left === 0) clearInterval(timerRef.current);
-    }, 1000);
-    return () => clearInterval(timerRef.current);
-  }, [unlockTime]);
-
-  const hours   = Math.floor(remaining / 3_600_000);
-  const minutes = Math.floor((remaining % 3_600_000) / 60_000);
-  const seconds = Math.floor((remaining % 60_000) / 1000);
-  const unlocked = remaining === 0;
-  return { hours, minutes, seconds, unlocked };
-}
 
 export default function Home() {
   const [name, setName] = useState('');
@@ -35,7 +10,6 @@ export default function Home() {
   const [quizTitle, setQuizTitle] = useState('Loading...');
   const [isActive, setIsActive] = useState(true);
   const router = useRouter();
-  const { hours, minutes, seconds, unlocked } = useCountdown(QUIZ_UNLOCK_TIME.getTime());
 
   useEffect(() => {
     fetch('/api/active-quiz')
@@ -111,31 +85,24 @@ export default function Home() {
             {quizTitle}
           </h1>
 
-          {!unlocked ? (
-            /* ── Countdown lock screen ── */
-            <div className="mt-8 text-center">
-              <div className="p-6 bg-amber-50 border border-amber-200 rounded-2xl mb-4">
-                <p className="text-xs font-semibold uppercase tracking-widest text-amber-700 mb-3">Quiz opens at</p>
-                <p className="text-3xl font-bold text-[#18181B] mb-1">9:00 PM tonight</p>
-                <p className="text-xs text-[#A1A1AA]">(Indian Standard Time)</p>
-              </div>
-              <div className="flex justify-center gap-3 mb-2">
-                {[{ v: hours, l: 'hrs' }, { v: minutes, l: 'min' }, { v: seconds, l: 'sec' }].map(({ v, l }) => (
-                  <div key={l} className="flex flex-col items-center bg-[#18181B] text-white rounded-xl px-4 py-3 min-w-[64px]">
-                    <span className="text-2xl font-bold tabular-nums">{String(v).padStart(2, '0')}</span>
-                    <span className="text-[10px] uppercase tracking-widest text-[#A1A1AA] mt-0.5">{l}</span>
-                  </div>
-                ))}
-              </div>
-              <p className="text-xs text-[#A1A1AA] mt-3">This page will unlock automatically — no need to refresh.</p>
-            </div>
-          ) : !isActive ? (
+          {!isActive ? (
             <div className="mt-8 text-center p-6 bg-red-50 text-red-800 rounded-xl border border-red-100">
               <p className="font-medium text-sm">There is currently no active quiz.</p>
               <p className="text-xs mt-2 text-red-600">Please contact the administrator for more information.</p>
             </div>
           ) : (
             <>
+              {/* Motivational message */}
+              <div className="mt-5 mb-6 p-4 bg-[#F0FDF4] border border-green-200 rounded-2xl text-center">
+                <p className="text-sm font-medium text-green-800 mb-1">
+                  🙏 You may attempt this quiz at any time of the day.
+                </p>
+                <p className="text-xs text-green-700 leading-relaxed">
+                  Please give your answers honestly and sincerely —
+                  this is an offering of your knowledge and devotion.
+                </p>
+              </div>
+
               <p className="text-[#71717A] text-sm text-center mb-8">
                 Enter your details to begin
               </p>
