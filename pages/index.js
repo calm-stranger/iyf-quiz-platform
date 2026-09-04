@@ -94,9 +94,6 @@ export default function Home() {
             <>
               {/* Motivational message */}
               <div className="mt-5 mb-6 p-4 bg-[#F0FDF4] border border-green-200 rounded-2xl text-center">
-                <p className="text-sm font-medium text-green-800 mb-1">
-                  🙏 You may attempt this quiz at any time of the day.
-                </p>
                 <p className="text-xs text-green-700 leading-relaxed">
                   Please give your answers honestly and sincerely —
                   this is an offering of your knowledge and devotion.
