@@ -4,7 +4,7 @@ import Head from 'next/head';
 
 export default function Home() {
   const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
   const [dob, setDob] = useState('');
   const [error, setError] = useState('');
   const [quizTitle, setQuizTitle] = useState('Loading...');
@@ -31,15 +31,15 @@ export default function Home() {
   const handleContinue = (e) => {
     e.preventDefault();
     const trimmedName = name.trim();
-    const trimmedEmail = email.trim();
+    const trimmedPhone = phone.trim();
     const trimmedDob = dob.trim();
 
     if (!trimmedName || trimmedName.length < 2) {
       setError('Please enter your full name (at least 2 characters).');
       return;
     }
-    if (!trimmedEmail || !trimmedEmail.includes('@')) {
-      setError('Please enter a valid email address.');
+    if (!trimmedPhone || !/^[0-9]{10}$/.test(trimmedPhone)) {
+      setError('Please enter a valid 10-digit phone number.');
       return;
     }
     if (!trimmedDob) {
@@ -48,7 +48,7 @@ export default function Home() {
     }
 
     sessionStorage.setItem('studentName', trimmedName);
-    sessionStorage.setItem('studentEmail', trimmedEmail);
+    sessionStorage.setItem('studentEmail', trimmedPhone);
     sessionStorage.setItem('studentDob', trimmedDob);
     router.push('/instructions');
   };
@@ -126,17 +126,17 @@ export default function Home() {
 
                 <div className="mb-4">
                   <label className="block text-sm font-medium text-[#3F3F46] mb-2">
-                    Email Address
+                    Phone Number
                   </label>
                   <input
-                    type="email"
-                    value={email}
+                    type="tel"
+                    value={phone}
                     onChange={(e) => {
-                      setEmail(e.target.value);
+                      setPhone(e.target.value);
                       setError('');
                     }}
-                    placeholder="e.g. sahil@example.com"
-                    autoComplete="email"
+                    placeholder="e.g. 9876543210"
+                    autoComplete="tel"
                     className="w-full px-4 py-3 rounded-xl border border-[#D4D4D8] bg-white text-[#18181B] placeholder-[#A1A1AA] focus:outline-none focus:ring-2 focus:ring-[#18181B] focus:border-transparent text-sm"
                     style={{ userSelect: 'text' }}
                   />
