@@ -61,8 +61,8 @@ export default async function handler(req, res) {
   if (!studentSchool && !studentEmail) {
     return res.status(400).json({ error: 'Please enter your school.' });
   }
-  if (!studentSchool && !studentEmail.includes('@')) {
-    return res.status(400).json({ error: 'Invalid email address.' });
+  if (!studentSchool && !/^[0-9]{10}$/.test(studentEmail)) {
+    return res.status(400).json({ error: 'Invalid phone number.' });
   }
 
   const studentName = name.trim();
