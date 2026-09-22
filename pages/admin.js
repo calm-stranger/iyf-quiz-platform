@@ -158,6 +158,7 @@ export default function Admin() {
       <>
         <Head>
           <title>Admin — Quiz Platform</title>
+          <meta name="viewport" content="width=device-width, initial-scale=1" />
         </Head>
         <div className="min-h-screen bg-[#F7F6F3] flex items-center justify-center p-6">
           <div className="w-full max-w-sm">
@@ -217,29 +218,30 @@ export default function Admin() {
     <>
       <Head>
         <title>Admin — Quiz Results</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
 
       <div className="min-h-screen bg-[#F7F6F3]">
         {/* Header */}
         <div className="bg-white border-b border-[#E4E4E7] sticky top-0 z-10">
-          <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
-            <div>
+          <div className="max-w-6xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-2">
+            <div className="min-w-0">
               <h1 className="font-semibold text-[#18181B]">Quiz Admin</h1>
-              <p className="text-xs text-[#71717A]">
+              <p className="text-xs text-[#71717A] truncate">
                 {selectedQuiz?.title || 'Quiz'} · {studentCount}/{maxStudents} students registered
               </p>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 flex-shrink-0">
               <button
-                onClick={fetchData}
-                className="px-3 py-1.5 text-xs border border-[#D4D4D8] rounded-lg text-[#52525B] hover:bg-[#F4F4F5] transition-colors"
+                onClick={() => fetchData()}
+                className="px-3 py-2 sm:py-1.5 text-xs border border-[#D4D4D8] rounded-lg text-[#52525B] hover:bg-[#F4F4F5] transition-colors"
               >
                 ↻ Refresh
               </button>
               <button
                 onClick={exportCSV}
                 disabled={!results.length}
-                className="px-3 py-1.5 text-xs bg-[#18181B] text-white rounded-lg disabled:opacity-40 hover:bg-[#27272A] transition-colors"
+                className="px-3 py-2 sm:py-1.5 text-xs bg-[#18181B] text-white rounded-lg disabled:opacity-40 hover:bg-[#27272A] transition-colors"
               >
                 Export CSV
               </button>
@@ -247,7 +249,7 @@ export default function Admin() {
           </div>
         </div>
 
-        <div className="max-w-6xl mx-auto px-4 py-6">
+        <div className="max-w-6xl mx-auto px-3 sm:px-4 py-6">
           {!dbEnabled && (
             <div className="bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 mb-5 text-sm text-amber-800">
               Supabase is not configured yet. The app is still using local questions and temporary results.
@@ -497,7 +499,78 @@ export default function Admin() {
                   No submissions yet
                 </div>
               ) : (
-                <div className="overflow-x-auto">
+                <>
+                {/* Card list — phones only. The 12-column table below is unreadable
+                    without horizontal scrolling below the sm breakpoint. */}
+                <div className="sm:hidden divide-y divide-[#F4F4F5]">
+                  {results.map((r, i) => (
+                    <div key={r.studentKey || i} className="p-4">
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="min-w-0">
+                          <p className="font-medium text-[#18181B] text-sm truncate">{r.studentName}</p>
+                          {(r.email || r.dob) && (
+                            <p className="text-xs text-[#A1A1AA] truncate">
+                              {[r.email, r.dob].filter(Boolean).join(' · ')}
+                            </p>
+                          )}
+                        </div>
+                        <span
+                          className={`flex-shrink-0 text-base font-semibold ${
+                            r.percentage >= 70
+                              ? 'text-emerald-600'
+                              : r.percentage >= 40
+                              ? 'text-amber-600'
+                              : 'text-red-600'
+                          }`}
+                        >
+                          {r.percentage}%
+                        </span>
+                      </div>
+
+                      <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-[#52525B]">
+                        <span>{r.score}/{r.total} correct</span>
+                        <span>{r.answeredCount}/{r.total} answered</span>
+                        <span className="font-mono">{r.timeTakenStr}</span>
+                        <span className="font-mono text-[#A1A1AA]">{new Date(r.submittedAt).toLocaleTimeString()}</span>
+                      </div>
+
+                      <div className="mt-2 flex flex-wrap items-center gap-2">
+                        {r.autoSubmitted ? (
+                          <span className="inline-flex items-center gap-1 bg-amber-50 text-amber-700 border border-amber-200 text-xs px-2 py-0.5 rounded-full font-medium">
+                            ⚠ Auto
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center gap-1 bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs px-2 py-0.5 rounded-full font-medium">
+                            ✓ Manual
+                          </span>
+                        )}
+                        {r.violations > 0 && (
+                          <span className="inline-flex items-center gap-1 bg-red-50 text-red-700 border border-red-200 text-xs px-2 py-0.5 rounded-full font-medium">
+                            {r.violations} violation{r.violations !== 1 ? 's' : ''}
+                          </span>
+                        )}
+                      </div>
+
+                      <div className="mt-3 flex items-center gap-4">
+                        <button
+                          onClick={() => fetchWrongAnswers(r.attemptId, r.studentName)}
+                          className="text-xs text-indigo-500 hover:text-indigo-700 font-medium transition-colors"
+                        >
+                          View Answers
+                        </button>
+                        <button
+                          onClick={() => handleReset(r.studentKey, r.studentName, r.attemptId)}
+                          disabled={resetting === r.studentKey}
+                          className="text-xs text-[#A1A1AA] hover:text-red-600 transition-colors disabled:opacity-50"
+                        >
+                          {resetting === r.studentKey ? 'Resetting…' : 'Reset'}
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="hidden sm:block overflow-x-auto">
                   <table className="w-full text-sm">
                     <thead>
                       <tr className="border-b border-[#F4F4F5]">
@@ -586,6 +659,7 @@ export default function Admin() {
                     </tbody>
                   </table>
                 </div>
+                </>
               )}
             </div>
           )}
@@ -598,7 +672,26 @@ export default function Admin() {
                   No active sessions right now
                 </div>
               ) : (
-                <div className="overflow-x-auto">
+                <>
+                <div className="sm:hidden divide-y divide-[#F4F4F5]">
+                  {activeSessions.map((s, i) => (
+                    <div key={i} className="p-4 flex items-center justify-between gap-3">
+                      <div className="min-w-0">
+                        <p className="font-medium text-[#18181B] text-sm truncate">{s.studentName}</p>
+                        <p className="text-xs text-[#A1A1AA] font-mono">
+                          {new Date(s.startTime).toLocaleTimeString()}
+                        </p>
+                      </div>
+                      {s.violations > 0 ? (
+                        <span className="flex-shrink-0 text-red-600 font-semibold text-sm">{s.violations} viol.</span>
+                      ) : (
+                        <span className="flex-shrink-0 text-[#A1A1AA] text-sm">0 viol.</span>
+                      )}
+                    </div>
+                  ))}
+                </div>
+
+                <div className="hidden sm:block overflow-x-auto">
                   <table className="w-full text-sm">
                     <thead>
                       <tr className="border-b border-[#F4F4F5]">
@@ -631,6 +724,7 @@ export default function Admin() {
                     </tbody>
                   </table>
                 </div>
+                </>
               )}
             </div>
           )}
@@ -644,9 +738,9 @@ export default function Admin() {
           style={{ backgroundColor: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)' }}
           onClick={(e) => { if (e.target === e.currentTarget) setWrongAnswersModal(null); }}
         >
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[85vh] flex flex-col overflow-hidden">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] sm:max-h-[85vh] flex flex-col overflow-hidden">
             {/* Modal Header */}
-            <div className="flex items-start justify-between px-6 py-5 border-b border-[#F4F4F5] flex-shrink-0">
+            <div className="flex items-start justify-between px-4 sm:px-6 py-4 sm:py-5 border-b border-[#F4F4F5] flex-shrink-0">
               <div>
                 <h2 className="text-base font-semibold text-[#18181B]">
                   {wrongAnswersModal.studentName}
@@ -674,7 +768,7 @@ export default function Admin() {
             </div>
 
             {/* Modal Body */}
-            <div className="overflow-y-auto flex-1 px-6 py-4 space-y-4">
+            <div className="overflow-y-auto flex-1 px-4 sm:px-6 py-4 space-y-4">
               {wrongAnswersModal.loading && (
                 <div className="flex items-center justify-center py-12 text-[#A1A1AA] text-sm">
                   <svg className="w-5 h-5 mr-2 animate-spin" fill="none" viewBox="0 0 24 24">
@@ -713,13 +807,13 @@ export default function Admin() {
                       let badge = null;
                       if (isCorrect) {
                         rowStyle = 'border border-emerald-300 bg-emerald-50 text-emerald-800';
-                        badge = <span className="ml-auto text-[10px] font-semibold text-emerald-600 bg-emerald-100 px-1.5 py-0.5 rounded-full">Correct</span>;
+                        badge = <span className="sm:ml-auto text-[10px] font-semibold text-emerald-600 bg-emerald-100 px-1.5 py-0.5 rounded-full flex-shrink-0">Correct</span>;
                       } else if (isSelected) {
                         rowStyle = 'border border-red-300 bg-red-50 text-red-700';
-                        badge = <span className="ml-auto text-[10px] font-semibold text-red-600 bg-red-100 px-1.5 py-0.5 rounded-full">Student's answer</span>;
+                        badge = <span className="sm:ml-auto text-[10px] font-semibold text-red-600 bg-red-100 px-1.5 py-0.5 rounded-full flex-shrink-0">Student's answer</span>;
                       }
                       return (
-                        <div key={optIdx} className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm ${rowStyle}`}>
+                        <div key={optIdx} className={`flex flex-wrap items-center gap-x-3 gap-y-1 rounded-lg px-3 py-2 text-sm ${rowStyle}`}>
                           <span className="font-mono text-xs w-4 flex-shrink-0">{String.fromCharCode(65 + optIdx)}.</span>
                           <span className="flex-1">{typeof opt === 'string' ? opt : JSON.stringify(opt)}</span>
                           {badge}
@@ -732,7 +826,7 @@ export default function Admin() {
             </div>
 
             {/* Modal Footer */}
-            <div className="px-6 py-4 border-t border-[#F4F4F5] flex justify-end flex-shrink-0">
+            <div className="px-4 sm:px-6 py-4 border-t border-[#F4F4F5] flex justify-end flex-shrink-0">
               <button
                 onClick={() => setWrongAnswersModal(null)}
                 className="px-4 py-2 bg-[#18181B] text-white text-sm rounded-lg hover:bg-[#27272A] transition-colors"
