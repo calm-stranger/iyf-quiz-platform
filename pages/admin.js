@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import Head from 'next/head';
 
 export default function Admin() {
@@ -17,6 +17,28 @@ export default function Admin() {
     durationMinutes: '30',
     maxStudents: '50',
   });
+  const [toast, setToast] = useState(null); // { message, type: 'success' | 'error' }
+  const toastTimerRef = useRef(null);
+  const [confirmDialog, setConfirmDialog] = useState(null); // { title, message, confirmLabel, danger, onConfirm }
+
+  const showToast = (message, type = 'error') => {
+    if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
+    setToast({ message, type });
+    toastTimerRef.current = setTimeout(() => setToast(null), 3500);
+  };
+
+  // A native confirm()/alert() can't be styled and reads as a jarring OS
+  // dialog, especially on mobile. This is the one in-app replacement used
+  // everywhere a destructive or data-changing action needs a yes/no first.
+  const askConfirm = ({ title, message, confirmLabel = 'Confirm', danger = false, onConfirm }) => {
+    setConfirmDialog({ title, message, confirmLabel, danger, onConfirm });
+  };
+  const closeConfirm = () => setConfirmDialog(null);
+  const runConfirm = async () => {
+    const dlg = confirmDialog;
+    setConfirmDialog(null);
+    if (dlg?.onConfirm) await dlg.onConfirm();
+  };
 
   const fetchData = async (pwd = password, quizId = selectedQuizId) => {
     // The list of importable banks never changes at runtime; fetched here so
@@ -51,24 +73,32 @@ export default function Admin() {
     fetchData(password);
   };
 
-  const handleReset = async (studentKey, studentName, attemptId) => {
-    if (!confirm(`Reset ${studentName}? They will be able to retake the quiz.`)) return;
-    setResetting(studentKey);
-    try {
-      const qs = new URLSearchParams({ password, quizId: selectedQuizId });
-      if (studentKey) qs.set('studentKey', studentKey);
-      if (attemptId) qs.set('attemptId', attemptId);
-      const res = await fetch(`/api/admin?${qs.toString()}`, { method: 'DELETE' });
-      const json = await res.json();
-      if (res.ok) {
-        await fetchData();
-      } else {
-        alert(json.error || 'Reset failed.');
-      }
-    } catch {
-      alert('Network error.');
-    }
-    setResetting(null);
+  const handleReset = (studentKey, studentName, attemptId) => {
+    askConfirm({
+      title: 'Reset student',
+      message: `Reset ${studentName}? They will be able to retake the quiz.`,
+      confirmLabel: 'Reset',
+      danger: true,
+      onConfirm: async () => {
+        setResetting(studentKey);
+        try {
+          const qs = new URLSearchParams({ password, quizId: selectedQuizId });
+          if (studentKey) qs.set('studentKey', studentKey);
+          if (attemptId) qs.set('attemptId', attemptId);
+          const res = await fetch(`/api/admin?${qs.toString()}`, { method: 'DELETE' });
+          const json = await res.json();
+          if (res.ok) {
+            await fetchData();
+            showToast(`${studentName} was reset.`, 'success');
+          } else {
+            showToast(json.error || 'Reset failed.');
+          }
+        } catch {
+          showToast('Network error.');
+        }
+        setResetting(null);
+      },
+    });
   };
 
   const fetchWrongAnswers = async (attemptId, studentName) => {
@@ -87,9 +117,8 @@ export default function Admin() {
     }
   };
 
-  const adminAction = async (payload) => {
+  const adminAction = async (payload, successMessage) => {
     setLoading(true);
-    setError('');
     try {
       const res = await fetch(`/api/admin?password=${encodeURIComponent(password)}`, {
         method: 'POST',
@@ -98,29 +127,38 @@ export default function Admin() {
       });
       const json = await res.json();
       if (!res.ok) {
-        setError(json.error || 'Action failed.');
+        showToast(json.error || 'Action failed.');
       } else {
         await fetchData(password, payload.quizId || json.quiz?.id || selectedQuizId);
+        if (successMessage) showToast(successMessage, 'success');
       }
     } catch {
-      setError('Network error. Please try again.');
+      showToast('Network error. Please try again.');
     }
     setLoading(false);
   };
 
-  const setupUtkarsh = async () => {
-    if (!confirm('Create the three Utkarsh group quizzes as drafts? Existing ones are left alone.')) return;
-    await adminAction({ action: 'setup_utkarsh' });
+  const setupUtkarsh = () => {
+    askConfirm({
+      title: 'Set up Utkarsh 2026',
+      message: 'Create the three Utkarsh group quizzes as drafts? Existing ones are left alone.',
+      confirmLabel: 'Create quizzes',
+      onConfirm: () => adminAction({ action: 'setup_utkarsh' }, 'Utkarsh group quizzes created.'),
+    });
   };
 
   const createQuiz = async (e) => {
     e.preventDefault();
-    await adminAction({
-      action: 'create_quiz',
-      title: newQuiz.title,
-      durationMinutes: newQuiz.durationMinutes,
-      maxStudents: newQuiz.maxStudents,
-    });
+    const title = newQuiz.title.trim();
+    await adminAction(
+      {
+        action: 'create_quiz',
+        title: newQuiz.title,
+        durationMinutes: newQuiz.durationMinutes,
+        maxStudents: newQuiz.maxStudents,
+      },
+      title ? `"${title}" created.` : 'Quiz created.'
+    );
     setNewQuiz({ title: '', durationMinutes: '30', maxStudents: '50' });
   };
 
@@ -316,87 +354,122 @@ export default function Admin() {
 
                 {selectedQuiz && (
                   <div className="mt-4 pt-4 border-t border-[#F4F4F5]">
-                    <p className="mb-2 text-xs text-[#71717A]">
+                    <p className="mb-3 text-xs text-[#71717A]">
                       Acting on <span className="font-medium text-[#18181B]">{selectedQuiz.title}</span>
                       {' — '}{selectedQuiz.questionCount || 0} question(s)
                     </p>
-                  <div className="flex flex-wrap gap-2">
-                    <select
-                      value={selectedBank}
-                      onChange={(e) => setSelectedBank(e.target.value)}
-                      className="px-2 py-2 text-xs border border-[#D4D4D8] rounded-lg bg-white"
-                    >
-                      <option value="">Choose a question bank…</option>
-                      {banks.map((b) => (
-                        <option key={b.key} value={b.key}>
-                          {b.label} ({b.count})
-                        </option>
-                      ))}
-                    </select>
-                    <button
-                      onClick={() => {
-                        const bank = banks.find((x) => x.key === selectedBank);
-                        // Name BOTH sides. The bank comes from the dropdown and
-                        // the target from the selected card, and mixing the two
-                        // up is what puts a Round 1 bank into a Round 2 quiz.
-                        if (
-                          !confirm(
-                            `Import "${bank?.label ?? selectedBank}" (${bank?.count ?? '?'} questions)\n` +
-                            `into: ${selectedQuiz.title}\n\n` +
-                            `This REPLACES the ${selectedQuiz.questionCount || 0} question(s) currently in that quiz.`
-                          )
-                        ) return;
-                        adminAction({ action: 'import_bank', quizId: selectedQuiz.id, bank: selectedBank });
-                      }}
-                      disabled={loading || !selectedBank}
-                      className="px-3 py-2 text-xs border border-[#D4D4D8] rounded-lg hover:bg-[#F4F4F5] disabled:opacity-40"
-                    >
-                      Import into this quiz
-                    </button>
-                    {selectedQuiz.questionCount > 0 ? (
-                      <button
-                        onClick={() => {
-                          if (!confirm(`Remove all ${selectedQuiz.questionCount} questions from "${selectedQuiz.title}"?`)) return;
-                          adminAction({ action: 'clear_questions', quizId: selectedQuiz.id });
-                        }}
-                        disabled={loading}
-                        className="px-3 py-2 text-xs border border-red-300 text-red-700 rounded-lg hover:bg-red-50 disabled:opacity-40"
-                      >
-                        Clear questions
-                      </button>
-                    ) : null}
-                    <button
-                      onClick={() => adminAction({ action: 'set_status', quizId: selectedQuiz.id, status: 'active' })}
-                      disabled={loading}
-                      className="px-3 py-2 text-xs bg-emerald-600 text-white rounded-lg disabled:opacity-40"
-                    >
-                      Publish
-                    </button>
-                    <button
-                      onClick={() => adminAction({ action: 'set_status', quizId: selectedQuiz.id, status: 'closed' })}
-                      disabled={loading}
-                      className="px-3 py-2 text-xs bg-[#18181B] text-white rounded-lg disabled:opacity-40"
-                    >
-                      Close
-                    </button>
-                    <button
-                      onClick={() =>
-                        adminAction({
-                          action: 'set_show_results',
-                          quizId: selectedQuiz.id,
-                          showResults: !selectedQuiz.show_results,
-                        })
-                      }
-                      disabled={loading}
-                      title="When on, students see their score and a correct/incorrect answer review right after they submit."
-                      className={`px-3 py-2 text-xs rounded-lg border disabled:opacity-40 ${
-                        selectedQuiz.show_results
-                          ? 'border-emerald-300 bg-emerald-50 text-emerald-700'
-                          : 'border-[#D4D4D8] text-[#52525B] hover:bg-[#F4F4F5]'
-                      }`}
-                    >
-                      {selectedQuiz.show_results ? '✓ Students see results' : 'Students see results: off'}
-                    </button>
+
+                    <div className="space-y-3">
+                      {/* Questions */}
+                      <div className="flex flex-col sm:flex-row gap-2">
+                        <select
+                          value={selectedBank}
+                          onChange={(e) => setSelectedBank(e.target.value)}
+                          className="px-2 py-2.5 sm:py-2 text-xs border border-[#D4D4D8] rounded-lg bg-white flex-1 sm:flex-none sm:min-w-[220px]"
+                        >
+                          <option value="">Choose a question bank…</option>
+                          {banks.map((b) => (
+                            <option key={b.key} value={b.key}>
+                              {b.label} ({b.count})
+                            </option>
+                          ))}
+                        </select>
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => {
+                              const bank = banks.find((x) => x.key === selectedBank);
+                              // Name BOTH sides. The bank comes from the dropdown
+                              // and the target from the selected card, and mixing
+                              // the two up is what puts a Round 1 bank into a
+                              // Round 2 quiz.
+                              askConfirm({
+                                title: 'Import questions',
+                                message: `Import "${bank?.label ?? selectedBank}" (${bank?.count ?? '?'} questions) into "${selectedQuiz.title}"? This replaces the ${selectedQuiz.questionCount || 0} question(s) currently in that quiz.`,
+                                confirmLabel: 'Import',
+                                danger: selectedQuiz.questionCount > 0,
+                                onConfirm: () =>
+                                  adminAction(
+                                    { action: 'import_bank', quizId: selectedQuiz.id, bank: selectedBank },
+                                    `Imported ${bank?.count ?? ''} question(s).`
+                                  ),
+                              });
+                            }}
+                            disabled={loading || !selectedBank}
+                            className="flex-1 sm:flex-none px-3 py-2.5 sm:py-2 text-xs border border-[#D4D4D8] rounded-lg hover:bg-[#F4F4F5] disabled:opacity-40"
+                          >
+                            Import
+                          </button>
+                          {selectedQuiz.questionCount > 0 ? (
+                            <button
+                              onClick={() =>
+                                askConfirm({
+                                  title: 'Clear questions',
+                                  message: `Remove all ${selectedQuiz.questionCount} questions from "${selectedQuiz.title}"? This cannot be undone.`,
+                                  confirmLabel: 'Clear questions',
+                                  danger: true,
+                                  onConfirm: () =>
+                                    adminAction({ action: 'clear_questions', quizId: selectedQuiz.id }, 'Questions cleared.'),
+                                })
+                              }
+                              disabled={loading}
+                              className="flex-1 sm:flex-none px-3 py-2.5 sm:py-2 text-xs border border-red-300 text-red-700 rounded-lg hover:bg-red-50 disabled:opacity-40"
+                            >
+                              Clear
+                            </button>
+                          ) : null}
+                        </div>
+                      </div>
+
+                      {/* Lifecycle + settings */}
+                      <div className="flex flex-wrap gap-2">
+                        <button
+                          onClick={() =>
+                            adminAction(
+                              { action: 'set_status', quizId: selectedQuiz.id, status: 'active' },
+                              `${selectedQuiz.title} published.`
+                            )
+                          }
+                          disabled={loading}
+                          className="flex-1 sm:flex-none px-3 py-2.5 sm:py-2 text-xs bg-emerald-600 text-white rounded-lg disabled:opacity-40"
+                        >
+                          Publish
+                        </button>
+                        <button
+                          onClick={() =>
+                            adminAction(
+                              { action: 'set_status', quizId: selectedQuiz.id, status: 'closed' },
+                              `${selectedQuiz.title} closed.`
+                            )
+                          }
+                          disabled={loading}
+                          className="flex-1 sm:flex-none px-3 py-2.5 sm:py-2 text-xs bg-[#18181B] text-white rounded-lg disabled:opacity-40"
+                        >
+                          Close
+                        </button>
+                        <button
+                          onClick={() =>
+                            adminAction(
+                              {
+                                action: 'set_show_results',
+                                quizId: selectedQuiz.id,
+                                showResults: !selectedQuiz.show_results,
+                              },
+                              selectedQuiz.show_results
+                                ? 'Students will no longer see their results.'
+                                : 'Students will now see their results after submitting.'
+                            )
+                          }
+                          disabled={loading}
+                          title="When on, students see their score and a correct/incorrect answer review right after they submit."
+                          className={`flex-1 sm:flex-none px-3 py-2.5 sm:py-2 text-xs rounded-lg border disabled:opacity-40 ${
+                            selectedQuiz.show_results
+                              ? 'border-emerald-300 bg-emerald-50 text-emerald-700'
+                              : 'border-[#D4D4D8] text-[#52525B] hover:bg-[#F4F4F5]'
+                          }`}
+                        >
+                          {selectedQuiz.show_results ? '✓ Students see results' : 'Students see results: off'}
+                        </button>
+                      </div>
                     </div>
                   </div>
                 )}
@@ -496,6 +569,7 @@ export default function Admin() {
             <div className="bg-white rounded-2xl border border-[#E4E4E7] overflow-hidden">
               {results.length === 0 ? (
                 <div className="text-center py-16 text-[#A1A1AA] text-sm">
+                  <p className="text-3xl mb-2">📭</p>
                   No submissions yet
                 </div>
               ) : (
@@ -669,6 +743,7 @@ export default function Admin() {
             <div className="bg-white rounded-2xl border border-[#E4E4E7] overflow-hidden">
               {activeSessions.length === 0 ? (
                 <div className="text-center py-16 text-[#A1A1AA] text-sm">
+                  <p className="text-3xl mb-2">💤</p>
                   No active sessions right now
                 </div>
               ) : (
@@ -834,6 +909,63 @@ export default function Admin() {
                 Close
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── Confirm dialog — replaces window.confirm() for every destructive
+          or data-changing action so it can be styled and read well on a
+          phone instead of popping a native OS dialog. ────────────────── */}
+      {confirmDialog && (
+        <div
+          className="fixed inset-0 z-[70] flex items-center justify-center p-4"
+          style={{ backgroundColor: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)' }}
+          onClick={(e) => { if (e.target === e.currentTarget) closeConfirm(); }}
+        >
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-sm p-5">
+            <h3 className="text-base font-semibold text-[#18181B]">{confirmDialog.title}</h3>
+            <p className="mt-2 text-sm text-[#52525B] leading-relaxed">{confirmDialog.message}</p>
+            <div className="mt-5 flex gap-2">
+              <button
+                onClick={closeConfirm}
+                className="flex-1 px-4 py-2.5 rounded-xl border border-[#D4D4D8] text-sm font-medium text-[#3F3F46] hover:bg-[#F4F4F5] transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={runConfirm}
+                className={`flex-1 px-4 py-2.5 rounded-xl text-sm font-medium text-white transition-colors ${
+                  confirmDialog.danger ? 'bg-red-600 hover:bg-red-700' : 'bg-[#18181B] hover:bg-[#27272A]'
+                }`}
+              >
+                {confirmDialog.confirmLabel || 'Confirm'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── Toast — success/error feedback for admin actions. Replaces
+          window.alert() and a dashboard `error` state that was previously
+          set but never rendered anywhere, so action failures failed
+          silently. ──────────────────────────────────────────────────── */}
+      {toast && (
+        <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-[80] w-full max-w-sm px-4">
+          <div
+            className={`flex items-start gap-3 rounded-xl border px-4 py-3 text-sm font-medium shadow-lg ${
+              toast.type === 'success'
+                ? 'bg-emerald-600 border-emerald-700 text-white'
+                : 'bg-red-600 border-red-700 text-white'
+            }`}
+          >
+            <span className="flex-1">{toast.message}</span>
+            <button
+              onClick={() => setToast(null)}
+              className="flex-shrink-0 text-white/80 hover:text-white"
+              aria-label="Dismiss"
+            >
+              ✕
+            </button>
           </div>
         </div>
       )}
