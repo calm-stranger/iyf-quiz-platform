@@ -377,6 +377,24 @@ export default function Admin() {
                     >
                       Close
                     </button>
+                    <button
+                      onClick={() =>
+                        adminAction({
+                          action: 'set_show_results',
+                          quizId: selectedQuiz.id,
+                          showResults: !selectedQuiz.show_results,
+                        })
+                      }
+                      disabled={loading}
+                      title="When on, students see their score and a correct/incorrect answer review right after they submit."
+                      className={`px-3 py-2 text-xs rounded-lg border disabled:opacity-40 ${
+                        selectedQuiz.show_results
+                          ? 'border-emerald-300 bg-emerald-50 text-emerald-700'
+                          : 'border-[#D4D4D8] text-[#52525B] hover:bg-[#F4F4F5]'
+                      }`}
+                    >
+                      {selectedQuiz.show_results ? '✓ Students see results' : 'Students see results: off'}
+                    </button>
                     </div>
                   </div>
                 )}

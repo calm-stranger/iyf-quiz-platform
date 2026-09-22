@@ -7,6 +7,7 @@ export default function Done() {
   const router = useRouter();
   const [result, setResult] = useState(null);
   const [autoSubmitted, setAutoSubmitted] = useState(false);
+  const [showReview, setShowReview] = useState(false);
 
   /*
     The Utkarsh quiz runs in two rounds. Rather than send a student back to
@@ -142,6 +143,22 @@ export default function Done() {
             <div className="bg-white rounded-2xl border border-[#E4E4E7] p-5 text-left mb-6">
               <p className="text-xs text-[#A1A1AA] uppercase tracking-widest mb-3">Summary</p>
               <div className="space-y-2">
+                {result.showResults && (
+                  <div className="flex justify-between text-sm">
+                    <span className="text-[#71717A]">Score</span>
+                    <span
+                      className={`font-semibold ${
+                        result.percentage >= 70
+                          ? 'text-emerald-600'
+                          : result.percentage >= 40
+                          ? 'text-amber-600'
+                          : 'text-red-600'
+                      }`}
+                    >
+                      {result.score} / {result.total} ({result.percentage}%)
+                    </span>
+                  </div>
+                )}
                 <div className="flex justify-between text-sm">
                   <span className="text-[#71717A]">Questions answered</span>
                   <span className="font-medium text-[#18181B]">
@@ -155,6 +172,81 @@ export default function Done() {
                   </div>
                 )}
               </div>
+            </div>
+          )}
+
+          {/* Answer review — only when the quiz admin has turned this on */}
+          {result?.showResults && Array.isArray(result.breakdown) && result.breakdown.length > 0 && (
+            <div className="mb-6">
+              <button
+                onClick={() => setShowReview((v) => !v)}
+                className="w-full rounded-xl border border-[#E4E4E7] bg-white px-4 py-3 text-left text-sm font-medium text-[#18181B] flex items-center justify-between"
+              >
+                <span>Review your answers</span>
+                <span className="text-[#A1A1AA]">{showReview ? '−' : '+'}</span>
+              </button>
+
+              {showReview && (
+                <div className="mt-3 space-y-3 text-left">
+                  {result.breakdown.map((item, idx) => (
+                    <div key={idx} className="rounded-xl border border-[#E4E4E7] bg-white overflow-hidden">
+                      <div
+                        className={`px-4 py-3 border-b border-[#F4F4F5] flex items-start justify-between gap-2 ${
+                          item.isCorrect ? 'bg-emerald-50' : 'bg-red-50'
+                        }`}
+                      >
+                        <div>
+                          <span className="text-[10px] font-semibold text-[#A1A1AA] uppercase tracking-widest">
+                            Question {idx + 1}
+                          </span>
+                          <p className="text-sm font-medium text-[#18181B] mt-0.5 leading-snug whitespace-pre-line">
+                            {item.question}
+                          </p>
+                        </div>
+                        <span
+                          className={`flex-shrink-0 text-[10px] font-semibold px-2 py-0.5 rounded-full ${
+                            item.isCorrect
+                              ? 'bg-emerald-100 text-emerald-700'
+                              : 'bg-red-100 text-red-700'
+                          }`}
+                        >
+                          {item.isCorrect ? 'Correct' : 'Incorrect'}
+                        </span>
+                      </div>
+                      <div className="px-4 py-3 space-y-2">
+                        {item.options.map((opt, optIdx) => {
+                          const isSelected = optIdx === item.selectedIndex;
+                          const isCorrectOpt = optIdx === item.correctIndex;
+                          let rowStyle = 'border border-[#E4E4E7] text-[#52525B]';
+                          let badge = null;
+                          if (isCorrectOpt) {
+                            rowStyle = 'border border-emerald-300 bg-emerald-50 text-emerald-800';
+                            badge = (
+                              <span className="ml-auto text-[10px] font-semibold text-emerald-600 bg-emerald-100 px-1.5 py-0.5 rounded-full">
+                                Correct
+                              </span>
+                            );
+                          } else if (isSelected) {
+                            rowStyle = 'border border-red-300 bg-red-50 text-red-700';
+                            badge = (
+                              <span className="ml-auto text-[10px] font-semibold text-red-600 bg-red-100 px-1.5 py-0.5 rounded-full">
+                                Your answer
+                              </span>
+                            );
+                          }
+                          return (
+                            <div key={optIdx} className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm ${rowStyle}`}>
+                              <span className="font-mono text-xs w-4 flex-shrink-0">{String.fromCharCode(65 + optIdx)}.</span>
+                              <span className="flex-1">{opt}</span>
+                              {badge}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           )}
 
@@ -226,7 +318,9 @@ export default function Done() {
           ) : (
             <div className="bg-[#F4F4F5] rounded-xl px-4 py-3">
               <p className="text-xs text-[#71717A]">
-                Your score will be shared by your teacher. You can close this window now.
+                {result?.showResults
+                  ? 'You can close this window now.'
+                  : 'Your score will be shared by your teacher. You can close this window now.'}
               </p>
             </div>
           )}

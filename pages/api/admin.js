@@ -123,6 +123,12 @@ export default async function handler(req, res) {
         return res.status(200).json({ quiz });
       }
 
+      if (action === 'set_show_results') {
+        if (!req.body.quizId) return res.status(400).json({ error: 'quizId is required.' });
+        const quiz = await db.setShowResults(req.body.quizId, req.body.showResults);
+        return res.status(200).json({ quiz });
+      }
+
       return res.status(400).json({ error: 'Unknown admin action.' });
     } catch (err) {
       console.error('[/api/admin POST]', err);

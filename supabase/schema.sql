@@ -94,3 +94,15 @@ create unique index if not exists quizzes_slug_idx
 
 create index if not exists quizzes_lane_idx
   on public.quizzes(event, group_code, stage, status);
+
+-- ============================================================================
+--  V3 — let students see their score and answer review after submitting
+--
+--  Off by default so an existing live event (Utkarsh, run in rounds across
+--  parallel groups) keeps behaving exactly as it does today — a student who
+--  finishes early cannot leak correct answers to a group still sitting the
+--  same round. An admin can turn this on per quiz for anything where an
+--  immediate result is wanted instead (practice quizzes, single-round events).
+-- ============================================================================
+
+alter table public.quizzes add column if not exists show_results boolean not null default false;

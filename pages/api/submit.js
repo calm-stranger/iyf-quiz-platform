@@ -10,6 +10,35 @@
 
 const kv = require('../../lib/store');
 const db = require('../../lib/db');
+const fallbackQuestions = require('../../lib/questions');
+const { getBank } = require('../../question-banks');
+
+/**
+ * Per-question review for the student: the question text and options in the
+ * order they saw them, plus which one they picked and which was correct.
+ *
+ * sessionQuestions only holds ids/indices (it is built once at quiz start and
+ * cached in KV for the whole attempt), so the original question text has to
+ * be reloaded the same way loadActiveQuiz() does in api/start.js.
+ */
+async function buildBreakdown(quizId, sessionQuestions, gradedAnswers) {
+  const questions =
+    db.enabled && quizId !== 'local'
+      ? await db.getQuizQuestions(quizId)
+      : getBank(quizId) || fallbackQuestions;
+
+  return sessionQuestions.map((sq, i) => {
+    const q = questions[sq.qIdx];
+    const ga = gradedAnswers[i];
+    return {
+      question: q?.question || '',
+      options: (sq.optionOrder || []).map((origIdx) => q?.options?.[origIdx] ?? ''),
+      selectedIndex: ga.studentAnswer,
+      correctIndex: ga.correctAnswer,
+      isCorrect: ga.isCorrect,
+    };
+  });
+}
 
 function msToMinSec(ms) {
   const totalSecs = Math.floor(ms / 1000);
@@ -82,6 +111,21 @@ export default async function handler(req, res) {
     const timeTakenMs = Date.now() - session.startTime;
     const percentage = Math.round((score / total) * 100);
 
+    /*
+      Whether this quiz reveals results to the student immediately, or only
+      through their teacher later (the default — see the show_results column
+      note in supabase/schema.sql). Local/no-db mode has no admin toggle to
+      turn it on with, so it always shows: there is no live parallel round to
+      protect there.
+    */
+    let showResults = true;
+    if (db.enabled && quizId !== 'local') {
+      const quiz = await db.getQuizById(quizId);
+      showResults = !!quiz?.show_results;
+    }
+
+    const breakdown = showResults ? await buildBreakdown(quizId, sessionQuestions, gradedAnswers) : null;
+
     const result = {
       studentName: session.studentName,
       studentKey: session.studentKey,
@@ -132,6 +176,8 @@ export default async function handler(req, res) {
       answeredCount,
       autoSubmitted: autoSubmitted || false,
       timeTakenStr: msToMinSec(timeTakenMs),
+      showResults,
+      breakdown,
     });
   } catch (err) {
     console.error('[/api/submit]', err);
