@@ -7,8 +7,8 @@ import Head from 'next/head';
   sit — see the fetch below. Hardcoding them means the page can promise 25
   minutes while the timer gives 20, and the student plans around the wrong one.
 */
-const FALLBACK_DURATION_MINS = 20;
-const FALLBACK_QUESTION_COUNT = 15;
+const FALLBACK_DURATION_MINS = 30;
+const FALLBACK_QUESTION_COUNT = 25;
 
 const buildRules = (durationMins) => [
   {
